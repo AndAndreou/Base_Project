@@ -51,9 +51,11 @@
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
+     <Compile Include="Assets\Scripts\SportyGirl\CharacterController.cs" />
      <Compile Include="Assets\VisSky\Scripts\CloudCam.cs" />
      <Compile Include="Assets\VisSky\Scripts\VisSky.cs" />
      <None Include="Assets\readme.txt" />
+     <None Include="Assets\Shaders\SportyGirl\SkinShader.shader" />
      <None Include="Assets\VisSky\readme.txt" />
      <None Include="Assets\VisSky\Shaders\SkyGradient.shader" />
      <None Include="Assets\Shaders\Minimap\MaskShader.shader" />
