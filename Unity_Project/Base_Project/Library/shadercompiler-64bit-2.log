@@ -1,40 +1,6 @@
 Base path: C:/Program Files/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-2-16476
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-2-13764
 Cmd: getPlatforms
-Cmd: compileSnippet
-  api=8 type=0 insize=7191 outsize=5233 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=7191 outsize=5507 kw=DIRECTIONAL SHADOWS_SCREEN LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF VERTEXLIGHT_ON ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=7191 outsize=3599 kw=DIRECTIONAL SHADOWS_SCREEN SHADOWS_NATIVE LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=3873 outsize=339 kw=DIRECTIONAL ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=3873 outsize=2753 kw=SPOT ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=3873 outsize=3892 kw=POINT_COOKIE ok=1
-Cmd: compileSnippet
-  error: 1 plat 1 at (18): floating point division by zero\nCompiling Fragment program with DIRECTIONAL
-  api=1 type=1 insize=3873 outsize=227 kw=DIRECTIONAL ok=1
-Cmd: compileSnippet
-  error: 1 plat 1 at (18): floating point division by zero\nCompiling Fragment program with SPOT
-  api=1 type=1 insize=3873 outsize=587 kw=SPOT ok=1
-Cmd: compileSnippet
-  error: 1 plat 4 at (18): floating point division by zero\nCompiling Fragment program with POINT_COOKIE
-  api=4 type=1 insize=3873 outsize=2151 kw=POINT_COOKIE ok=1
-Cmd: compileSnippet
-  error: 1 plat 4 at (18): floating point division by zero\nCompiling Fragment program with DIRECTIONAL_COOKIE
-  api=4 type=1 insize=3873 outsize=1688 kw=DIRECTIONAL_COOKIE ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=3031 outsize=3583 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=6491 outsize=758 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF UNITY_HDR_ON ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=6491 outsize=1924 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF UNITY_HDR_ON ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=6228 outsize=630 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF UNITY_HDR_ON ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=6228 outsize=2135 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF UNITY_HDR_ON ok=1
 Unhandled exception: Readfile from pipe failed. GLE=The pipe has been ended.
 
 
