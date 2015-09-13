@@ -84,4 +84,9 @@ public class CharacterController : MonoBehaviour {
 		}
 
 	}
+
+	public void teleport(Vector3 destination)
+	{
+		this.transform.position = destination + new Vector3(0,  this.GetComponent<BoxCollider>().size.y/2,0);
+	}
 }

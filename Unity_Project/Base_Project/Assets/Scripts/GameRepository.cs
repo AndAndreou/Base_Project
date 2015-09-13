@@ -8,6 +8,10 @@ public class GameRepository : MonoBehaviour {
 	//static names
 	private string gameManagerTag = "GameManager";
 	private string GUIManagerTag = "GUIManager";
+	private string teleportPointTag = "TeleportPoint";
+	private string playerTag = "Player";
+	private string parentTeleportPointsTag = "ParentTeleportPoints";
+	private string mapCameraTag = "MapCamera";
 	//private int currentLevel=1;
 	
 	// Explicit static constructor to tell C# compiler
@@ -37,13 +41,28 @@ public class GameRepository : MonoBehaviour {
 	}
 
 	
-	public static string getGameManagerTag() {
+	public static string GetGameManagerTag() {
 		return instance.gameManagerTag;
 	}
 
-	public static string getGUIManagerTag() {
+	public static string GetGUIManagerTag() {
 		return instance.GUIManagerTag;
 	}
 
+	public static string GetTeleportPointTag() {
+		return instance.teleportPointTag;
+	}
+
+	public static string GetPlayerTag() {
+		return instance.playerTag;
+	}
+
+	public static string GetParentTeleportPointsTag() {
+		return instance.parentTeleportPointsTag;
+	}
+
+	public static string GetMapCameraTag() {
+		return instance.mapCameraTag;
+	}
 
 }

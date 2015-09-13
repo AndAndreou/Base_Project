@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRepository.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
+     <Compile Include="Assets\Scripts\PauseGUI.cs" />
      <Compile Include="Assets\Scripts\SportyGirl\CharacterController.cs" />
      <Compile Include="Assets\VisSky\Scripts\CloudCam.cs" />
      <Compile Include="Assets\VisSky\Scripts\VisSky.cs" />
