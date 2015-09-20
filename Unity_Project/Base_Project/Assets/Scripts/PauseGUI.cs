@@ -10,8 +10,8 @@ public class PauseGUI : MonoBehaviour {
 	public Vector2 sizeBoxSettings;
 	public Vector2 sizeButtonSettings;
 
-	public float fontSize = 0.01f; 
-	public float titlefontSize = 0.02f; 
+	public float fontSize ; //0.02
+	public float titlefontSize ; //0.04
 
 	private int numOfButtons = 6;
 	private enum PauseMenuState
@@ -33,7 +33,7 @@ public class PauseGUI : MonoBehaviour {
 
 	public Texture backgroundTexture;
 
-	public float volumeLevel = 10.0F;
+	public float volumeLevel = 10.0F; //prepi na gini ena geniko volume gia ola
 
 	public AudioClip buttonClickAudio;
 
@@ -126,9 +126,10 @@ public class PauseGUI : MonoBehaviour {
 			else if (pauseMenuState == PauseMenuState.ResumeGame)
 			{
 				//close pause menu
+				pauseMenuState = PauseMenuState.Pause;
 				guiManager.SetShowPauseMenu(false);
 				gameManager.UnPause();
-				pauseMenuState = PauseMenuState.Pause;
+
 			}
 			else if (pauseMenuState == PauseMenuState.SaveGame)
 			{
@@ -142,11 +143,14 @@ public class PauseGUI : MonoBehaviour {
 			else if (pauseMenuState == PauseMenuState.MainMenu)
 			{
 				//go to main menu scene
+				Application.LoadLevel("menu(main)_scene");
+				/*
 				if (GUI.Button(new Rect(0,0,10,10), "Back"))
 				{
 					pauseMenuState = PauseMenuState.Pause;
 					PlayButtonSfx();
 				}
+				*/
 			}
 			else if (pauseMenuState == PauseMenuState.Controls)
 			{
@@ -261,6 +265,10 @@ public class PauseGUI : MonoBehaviour {
 
 	public void SetShowPauseMenu(bool value)
 	{
+		if (value == false) 
+		{
+			pauseMenuState = PauseMenuState.Pause;
+		}
 		showPauseMenu = value; 
 	}
 

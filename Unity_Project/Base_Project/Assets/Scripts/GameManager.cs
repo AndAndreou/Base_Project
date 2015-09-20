@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour {
 		isPause = false;
 		guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
 		maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
+
+		Time.timeScale = 1;
 	}
 	
 	// Update is called once per frame

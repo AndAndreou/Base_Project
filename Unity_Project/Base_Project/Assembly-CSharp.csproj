@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRepository.cs" />
+     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
      <Compile Include="Assets\Scripts\PauseGUI.cs" />
      <Compile Include="Assets\Scripts\SportyGirl\CharacterController.cs" />
