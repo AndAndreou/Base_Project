@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PauseGUI : MonoBehaviour {
 
+	//private GUIManager guiManager;
+	private GameManager gameManager;
+
 	public Vector2 titleSizeForPause; // % of screen range 0-1
 	public Vector2 titleForPauseOffset;
 	public Vector2 sizeButtonPause;
@@ -39,9 +42,6 @@ public class PauseGUI : MonoBehaviour {
 
 	private bool showPauseMenu ;
 
-	private GUIManager guiManager;
-	private GameManager gameManager;
-
 
 	// Use this for initialization
 	void Start () {
@@ -50,7 +50,7 @@ public class PauseGUI : MonoBehaviour {
 		pauseMenuState = PauseMenuState.Pause;
 		title = "Pause";
 
-		guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
+		//guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 	}
 
@@ -127,7 +127,7 @@ public class PauseGUI : MonoBehaviour {
 			{
 				//close pause menu
 				pauseMenuState = PauseMenuState.Pause;
-				guiManager.SetShowPauseMenu(false);
+				this.SetShowPauseMenu(false);
 				gameManager.UnPause();
 
 			}

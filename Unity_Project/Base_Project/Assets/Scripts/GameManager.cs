@@ -4,12 +4,15 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	private GUIManager guiManager;
-	private GameObject maxMapCamera;
+	//private GameObject maxMapCamera;
+	private PauseGUI pauseGUI;
+	private CameraController cameraController;
 
 	//keys
 	public KeyCode exitApplication;
 	public KeyCode mapKey;
 	public KeyCode pauseKey;
+	public KeyCode changeCameraView;
 
 
 	private bool isPause;
@@ -19,9 +22,12 @@ public class GameManager : MonoBehaviour {
 	
 		isPause = false;
 		guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
-		maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
+		pauseGUI = GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<PauseGUI>();
+		//maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
+		cameraController = GameObject.FindWithTag (GameRepository.GetMainCameraTag()).GetComponent<CameraController>();
 
 		Time.timeScale = 1;
+		Cursor.visible = false; 
 	}
 	
 	// Update is called once per frame
@@ -31,12 +37,12 @@ public class GameManager : MonoBehaviour {
 			if(guiManager.GetMaxMapShow())
 			{
 				guiManager.SetMaxMapShow(false);
-				maxMapCamera.SetActive(false);
+				//SetMaxMapCameraState(false);
 				UnPause();
 			}
 			else if (isPause)
 			{
-				guiManager.SetShowPauseMenu (false);
+				pauseGUI.SetShowPauseMenu (false);
 				UnPause();
 			}
 			else
@@ -49,13 +55,14 @@ public class GameManager : MonoBehaviour {
 			if ((!guiManager.GetMaxMapShow()) && !isPause)
 			{
 				guiManager.SetMaxMapShow(true);
-				maxMapCamera.SetActive(true);
+				//SetMaxMapCameraState(true);
 				Pause ();
+				//Screen.showCursor = true;
 			}
 			else if (guiManager.GetMaxMapShow())
 			{
 				guiManager.SetMaxMapShow(false);
-				maxMapCamera.SetActive(false);
+				//SetMaxMapCameraState(false);
 				UnPause();
 			}
 		}
@@ -65,35 +72,53 @@ public class GameManager : MonoBehaviour {
 				if (!isPause)
 				{
 					Pause();
-					guiManager.SetShowPauseMenu (true);
+					//Screen.showCursor = true;
+					pauseGUI.SetShowPauseMenu (true);
 				}
 				else
 				{
 					UnPause();
-					guiManager.SetShowPauseMenu (false);
+					pauseGUI.SetShowPauseMenu (false);
 				}
+			}
+		}
+
+		if (!isPause) 
+		{
+			if (Input.GetKeyDown(changeCameraView) ) 
+			{
+				cameraController.ChangeCameraState();
 			}
 		}
 
 	}
 
+/*---------------------------------------------------------------------------------------------------------------*/	
+
 	public void Pause()
 	{
 			Time.timeScale = 0 ;
 			isPause = true ;
+			Cursor.visible = true;
 			Debug.Log ("pause");
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
 
 	public void UnPause()
 	{
 		Time.timeScale = 1 ;
 		isPause = false ;
+		Cursor.visible = false;
 		Debug.Log ("unpause");
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/	
 
 	public bool GetIsPause()
 	{
 		return isPause;
 	}
+	
 
 }

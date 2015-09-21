@@ -3,8 +3,21 @@ guid: b5563c9be9b1f294fb5084d8df803c74
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: Camera
+    100002: lod_parts
+    100004: passage_main
+    100006: //RootNode
+    400000: Camera
+    400002: lod_parts
+    400004: passage_main
+    400006: //RootNode
+    2300000: lod_parts
+    2300002: passage_main
+    3300000: lod_parts
+    3300002: passage_main
     4300000: passage_main
     4300002: lod_parts
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 2

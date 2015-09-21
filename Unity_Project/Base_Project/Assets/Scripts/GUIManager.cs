@@ -8,6 +8,8 @@ public class GUIManager : MonoBehaviour {
 	private GameObject[] teleportPoint;
 	private GameObject parentTeleportPoints;
 	private PauseGUI pauseGUI; 
+	private GameManager gameManager;
+	private GameObject maxMapCamera;
 
 	public RenderTexture miniMapTexture;
 	public Material miniMapMaterial;
@@ -40,21 +42,24 @@ public class GUIManager : MonoBehaviour {
 	private Vector2 scrollPosition;
 
 	//hold last button selected
-	private int lastButtonSelect = -1;
+	private int lastButtonSelect ;
 
-	private bool showPauseMenu;
+	//private bool showPauseMenu;
 
 	// Use this for initialization
 	void Start () {
 
-		maxMapShow = false;
-		showPauseMenu = false;
+		//showPauseMenu = false;
 
 		teleportPoint = GameObject.FindGameObjectsWithTag (GameRepository.GetTeleportPointTag());
 		player = GameObject.FindWithTag (GameRepository.GetPlayerTag());
 		characterControllerScript = player.GetComponent<CharacterController> ();
 		parentTeleportPoints = GameObject.FindWithTag (GameRepository.GetParentTeleportPointsTag());
 		pauseGUI = this.GetComponent<PauseGUI> ();
+		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
+		maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
+
+		SetMaxMapShow (false);
 	}
 
 /*---------------------------------------------------------------------------------------------------------------*/	
@@ -72,14 +77,14 @@ public class GUIManager : MonoBehaviour {
 	{
 		if (maxMapShow == true) 
 		{
-			parentTeleportPoints.SetActive(true);
 			DrawMaxMap ();
 		} 
 		else 
 		{
-			parentTeleportPoints.SetActive(false);
-			DrawMinMap ();
-
+			if (pauseGUI.GetShowPauseMenu() == false)
+			{
+				DrawMinMap ();
+			}
 		}
 	}
 
@@ -173,6 +178,9 @@ public class GUIManager : MonoBehaviour {
 		if (DrawButton (positionTeleportButton,"Teleport",sizeTeleportButton)) 
 		{
 			characterControllerScript.teleport(teleportPoint[lastButtonSelect].transform.position);
+			SetMaxMapShow(false);
+			SetMaxMapCameraState(false);
+			gameManager.UnPause();
 		}
 
 	}
@@ -202,6 +210,18 @@ public class GUIManager : MonoBehaviour {
 
 	public void SetMaxMapShow(bool value)
 	{
+		if (value == true) 
+		{
+			SetTeleportPointsState(true);
+			SetMaxMapCameraState(true);
+		} 
+		else 
+		{
+			SetMaxMapCameraState(false);
+			SetTeleportPointsState(false);
+			lastButtonSelect = -1;
+		}
+
 		maxMapShow = value;
 	}
 
@@ -213,27 +233,39 @@ public class GUIManager : MonoBehaviour {
 	}
 
 /*---------------------------------------------------------------------------------------------------------------*/	
-	
+	/*
 	public void SetShowPauseMenu(bool value)
 	{
 		showPauseMenu = value;
-		if (showPauseMenu == true) 
-		{
-			pauseGUI.SetShowPauseMenu (true);
-		} 
-		else
-		{
-			pauseGUI.SetShowPauseMenu (false);
-		}
+		//if (showPauseMenu == true) 
+		//{
+			pauseGUI.SetShowPauseMenu (showPauseMenu);
+		//} 
+		//else
+		//{
+		//	pauseGUI.SetShowPauseMenu (false);
+		//}
 	}
-	
+	*/
 /*---------------------------------------------------------------------------------------------------------------*/	
-	
+	/*
 	public bool GetShowPauseMenu()
 	{
 		return showPauseMenu;
 	}
-
+	*/
 /*---------------------------------------------------------------------------------------------------------------*/	
 
+	public void SetMaxMapCameraState(bool value)
+	{
+		maxMapCamera.SetActive(value);
+		
+	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	public void SetTeleportPointsState(bool value)
+	{
+		parentTeleportPoints.SetActive (value);
+	}
 }

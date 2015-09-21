@@ -22,15 +22,16 @@ public class FreeflightCamera : MonoBehaviour
         // rotation        
         if (Input.GetMouseButton(1)) 
         {
-            float rotX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivityX;
+            //float rotX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivityX;
             rotY += Input.GetAxis("Mouse Y") * mouseSensitivityY;
             rotY = Mathf.Clamp(rotY, -89.5f, 89.5f);
-            transform.localEulerAngles = new Vector3(-rotY, rotX, 0.0f);
+            transform.localEulerAngles = new Vector3(-rotY, 0.0f, 0.0f);
         }
         
         float forward = Input.GetAxis("Vertical");
         float strafe  = Input.GetAxis("Horizontal");
         
+		/*
         // move forwards/backwards
         if (forward != 0.0f)  
         {
@@ -39,6 +40,7 @@ public class FreeflightCamera : MonoBehaviour
             gameObject.transform.localPosition += gameObject.transform.localRotation * trans;
         }
 
+
         // strafe left/right
         if (strafe != 0.0f) 
         {
@@ -46,5 +48,6 @@ public class FreeflightCamera : MonoBehaviour
             Vector3 trans = new Vector3(strafe * speed * Time.deltaTime, 0.0f, 0.0f);
             gameObject.transform.localPosition += gameObject.transform.localRotation * trans;
         }
+		*/
 	}
 }

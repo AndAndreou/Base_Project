@@ -3,10 +3,31 @@ guid: 854ab0ff68d66d94ca7d9c93502b9f6e
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: Camera
+    100002: //RootNode
+    100004: light_double
+    100006: light_single
+    100008: light_triple
+    100010: light_wall_fixed
+    400000: Camera
+    400002: //RootNode
+    400004: light_double
+    400006: light_single
+    400008: light_triple
+    400010: light_wall_fixed
+    2300000: light_double
+    2300002: light_single
+    2300004: light_triple
+    2300006: light_wall_fixed
+    3300000: light_double
+    3300002: light_single
+    3300004: light_triple
+    3300006: light_wall_fixed
     4300000: light_single
     4300002: light_triple
     4300004: light_double
     4300006: light_wall_fixed
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 2

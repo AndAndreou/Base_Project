@@ -3,12 +3,37 @@ guid: 11a2bcd9b5cbccc40a80fabea9db089e
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: Camera
+    100004: eingang
+    100006: lod_parts
+    100008: rathaus_main
+    100010: turm
+    100012: uebergang
+    400000: //RootNode
+    400002: Camera
+    400004: eingang
+    400006: lod_parts
+    400008: rathaus_main
+    400010: turm
+    400012: uebergang
+    2300000: eingang
+    2300002: lod_parts
+    2300004: rathaus_main
+    2300006: turm
+    2300008: uebergang
+    3300000: eingang
+    3300002: lod_parts
+    3300004: rathaus_main
+    3300006: turm
+    3300008: uebergang
     4300000: rathaus_main
     4300002: lod_parts
     4300004: uebergang
     4300006: turm
     4300008: eingang
     4300010: dach
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 2
