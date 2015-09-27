@@ -10,6 +10,9 @@ public class CharacterController : MonoBehaviour {
 	
 	public float mouseSensitivityX = 5.0f;
 	public float mouseSensitivityY = 5.0f;
+
+	private bool zoom;
+	private bool sprint;
 	
 	//float rotY = 0.0f;
 
@@ -26,6 +29,9 @@ public class CharacterController : MonoBehaviour {
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 
 		animator = GetComponent<Animator> ();
+
+		zoom = false;
+		sprint = true;
 
 	}
 	
@@ -51,6 +57,21 @@ public class CharacterController : MonoBehaviour {
 			if (forward != 0.0f & Input.GetKey (KeyCode.LeftShift)) {
 				animator.SetBool ("Aiming", false);
 				animator.SetFloat ("Speed", 1f);
+				sprint = true;
+			}
+			else
+			{
+				sprint = false;
+			}
+
+			//zoom
+			if (Input.GetKey(KeyCode.Mouse1))
+			{
+				zoom = true;
+			}
+			else
+			{
+				zoom = false;
 			}
 
 			if (Input.GetKey (KeyCode.Space)) {
@@ -91,5 +112,15 @@ public class CharacterController : MonoBehaviour {
 	public void teleport(Vector3 destination)
 	{
 		this.transform.position = destination + new Vector3(0,  this.GetComponent<BoxCollider>().size.y/2,0);
+	}
+
+	public bool IsZooming()
+	{
+		return zoom;
+	}
+	
+	public bool IsSprinting()
+	{
+		return sprint ;
 	}
 }

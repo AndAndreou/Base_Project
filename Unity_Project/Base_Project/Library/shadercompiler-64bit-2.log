@@ -1,35 +1,6 @@
 Base path: C:/Program Files/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-2-3604
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-2-5124
 Cmd: getPlatforms
-Cmd: compileSnippet
-  api=1 type=0 insize=7206 outsize=708 kw=DIRECTIONAL SHADOWS_SCREEN LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=7206 outsize=7605 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF VERTEXLIGHT_ON ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=7206 outsize=3599 kw=DIRECTIONAL SHADOWS_SCREEN SHADOWS_NATIVE LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=3888 outsize=3892 kw=POINT ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=3888 outsize=3892 kw=SPOT ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=3888 outsize=2753 kw=DIRECTIONAL_COOKIE ok=1
-Cmd: compileSnippet
-  error: 1 plat 8 at (18): floating point division by zero\nCompiling Fragment program with DIRECTIONAL
-  api=8 type=1 insize=3888 outsize=1731 kw=DIRECTIONAL ok=1
-Cmd: compileSnippet
-  error: 1 plat 4 at (18): floating point division by zero\nCompiling Fragment program with POINT_COOKIE
-  api=4 type=1 insize=3888 outsize=2151 kw=POINT_COOKIE ok=1
-Cmd: compileSnippet
-  error: 1 plat 4 at (18): floating point division by zero\nCompiling Fragment program with DIRECTIONAL_COOKIE
-  api=4 type=1 insize=3888 outsize=1688 kw=DIRECTIONAL_COOKIE ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=6506 outsize=6208 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=6506 outsize=2876 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=6243 outsize=4020 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF UNITY_HDR_ON ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=6243 outsize=3144 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
 Unhandled exception: Readfile from pipe failed. GLE=The pipe has been ended.
 
 

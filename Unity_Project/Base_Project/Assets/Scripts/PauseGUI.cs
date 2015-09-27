@@ -133,8 +133,10 @@ public class PauseGUI : MonoBehaviour {
 			}
 			else if (pauseMenuState == PauseMenuState.SaveGame)
 			{
+
 				//save game
-				if (GUI.Button(new Rect(0,0,10,10), "Back"))
+				GUI.skin = settingsSkin;
+				if (GUI.Button(new Rect(0,0,Screen.width * sizeButtonSettings.x,Screen.height * sizeButtonSettings.y), "Back"))
 				{
 					pauseMenuState = PauseMenuState.Pause;
 					PlayButtonSfx();
@@ -144,18 +146,25 @@ public class PauseGUI : MonoBehaviour {
 			{
 				//go to main menu scene
 				Application.LoadLevel("menu(main)_scene");
-				/*
-				if (GUI.Button(new Rect(0,0,10,10), "Back"))
-				{
-					pauseMenuState = PauseMenuState.Pause;
-					PlayButtonSfx();
-				}
-				*/
+
 			}
 			else if (pauseMenuState == PauseMenuState.Controls)
 			{
+				GUI.skin = settingsSkin;
 				title = "Controls";
-				if (GUI.Button(new Rect(0,0,10,10), "Back"))
+				GUI.Box(new Rect(0,titleSize.y,Screen.width ,Screen.height-titleSize.y),
+				        "WASD for navigate character" + 
+				        "\n Mouse Movement for change character view point" + 
+				        "\n Shift for character sprint" + 
+				        "\n Space for character jumb" +
+				        "\n Mouse Right hold for zoom" +
+				        "\n Mouse scrollwheel for ZoomIn and ZoomOut" +
+				        "\n V for change camera status (first/third person camera" +
+				        "\n P for pause game" +
+				        "\n M for show teleport map" +
+				        "\n Esc for exit menu/game" 
+				        );
+				if (GUI.Button(new Rect(0,0,Screen.width * sizeButtonSettings.x,Screen.height * sizeButtonSettings.y), "Back"))
 				{
 					pauseMenuState = PauseMenuState.Pause;
 					PlayButtonSfx();
