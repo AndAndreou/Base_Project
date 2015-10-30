@@ -130,6 +130,7 @@ public class CameraController : MonoBehaviour {
 
 				}
 				//if not find some position set as first person 
+
 				if (flag) {
 					targetPivotOffset = firstPersonPivotOffset;
 					targetCamOffset = firstPersonPositionOffset;
@@ -172,6 +173,7 @@ public class CameraController : MonoBehaviour {
 	// concave objects doesn't detect hit from outside, so cast in both directions
 	bool DoubleViewingPosCheck(Vector3 checkPos)
 	{
+		//Debug.Log(ViewingPosCheck (checkPos) + "  |  " + ReverseViewingPosCheck (checkPos));
 		return ViewingPosCheck (checkPos) && ReverseViewingPosCheck (checkPos);
 	}
 
@@ -220,9 +222,10 @@ public class CameraController : MonoBehaviour {
 
 		if (isRayHit2) 
 		{
-			//Debug.DrawLine (startPosRay2, RayHit2.transform.position , Color.green);
+			Debug.DrawLine (startPosRay2, RayHit2.transform.position , Color.green);
 			if (RayHit2.transform.tag != GameRepository.GetMainCameraTag ()) 
 			{
+				//Debug.Log(RayHit2.transform.tag);
 				return false;
 			}
 		}
