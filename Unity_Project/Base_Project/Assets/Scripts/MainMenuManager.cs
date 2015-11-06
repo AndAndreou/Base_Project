@@ -127,6 +127,7 @@ public class MainMenuManager : MonoBehaviour {
 		{
 			//go to main menu scene
 			title = "Load Game";
+
 			if (GUI.Button (new Rect (0, 0, 10, 10), "Back")) {
 				mainMenuState = MainMenuState.MainMenu;
 				PlayButtonSfx ();
