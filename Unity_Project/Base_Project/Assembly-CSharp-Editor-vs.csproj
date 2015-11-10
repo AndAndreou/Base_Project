@@ -51,6 +51,8 @@
      <None Include="Assets\Shaders\SportyGirl\SkinShader.shader" />
      <None Include="Assets\VisSky\readme.txt" />
      <None Include="Assets\VisSky\Shaders\SkyGradient.shader" />
+     <None Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\Readme.txt" />
+     <None Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\Mirror.shader" />
      <None Include="Assets\Shaders\Minimap\MaskShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -66,6 +68,9 @@
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="MySql.Data">
+ <HintPath>D:/GitHub/Base_Project/Base_Project/Unity_Project/Base_Project/Assets/DLL/MySql.Data.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>

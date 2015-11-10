@@ -13,6 +13,7 @@ public class GameRepository : MonoBehaviour {
 	private string parentTeleportPointsTag = "ParentTeleportPoints";
 	private string mapCameraTag = "MapCamera";
 	private string mainCameraTag = "MainCamera";
+	private string DBManagerTag = "DBManager";
 
 	//private int currentLevel=1;
 	
@@ -90,5 +91,11 @@ public class GameRepository : MonoBehaviour {
 	}
 	
 /*---------------------------------------------------------------------------------------------------------------*/	
+	
+	public static string GetDBManagerTag() {
+		return instance.DBManagerTag;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
 
 }

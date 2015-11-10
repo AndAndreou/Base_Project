@@ -46,12 +46,16 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\OfficeMegaKit\Office Tile Kit\Scripts\SimpleDoorTrigger.cs" />
+     <Compile Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\MirrorReflection.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\DBManager.cs" />
      <Compile Include="Assets\Scripts\FPSCounter.cs" />
      <Compile Include="Assets\Scripts\FreeflightCamera.cs" />
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRepository.cs" />
+     <Compile Include="Assets\Scripts\LoginGUI.cs" />
      <Compile Include="Assets\Scripts\MainMenuManager.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
      <Compile Include="Assets\Scripts\PauseGUI.cs" />
@@ -62,6 +66,8 @@
      <None Include="Assets\Shaders\SportyGirl\SkinShader.shader" />
      <None Include="Assets\VisSky\readme.txt" />
      <None Include="Assets\VisSky\Shaders\SkyGradient.shader" />
+     <None Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\Readme.txt" />
+     <None Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\Mirror.shader" />
      <None Include="Assets\Shaders\Minimap\MaskShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -71,6 +77,9 @@
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="MySql.Data">
+ <HintPath>D:/GitHub/Base_Project/Base_Project/Unity_Project/Base_Project/Assets/DLL/MySql.Data.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
