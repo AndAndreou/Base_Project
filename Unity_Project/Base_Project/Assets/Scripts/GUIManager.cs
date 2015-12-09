@@ -44,22 +44,28 @@ public class GUIManager : MonoBehaviour {
 	//hold last button selected
 	private int lastButtonSelect ;
 
+	//set yes if scene use maxmap or minimap
+	public bool useMaxMap;
+	public bool useMiniMap;
+
 	//private bool showPauseMenu;
 
 	// Use this for initialization
 	void Start () {
 
 		//showPauseMenu = false;
-
-		teleportPoint = GameObject.FindGameObjectsWithTag (GameRepository.GetTeleportPointTag());
+		if (useMaxMap) {
+			teleportPoint = GameObject.FindGameObjectsWithTag (GameRepository.GetTeleportPointTag ());
+			parentTeleportPoints = GameObject.FindWithTag (GameRepository.GetParentTeleportPointsTag ());
+			maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
+			SetMaxMapShow (false);
+		}
 		player = GameObject.FindWithTag (GameRepository.GetPlayerTag());
 		characterControllerScript = player.GetComponent<CharacterController> ();
-		parentTeleportPoints = GameObject.FindWithTag (GameRepository.GetParentTeleportPointsTag());
 		pauseGUI = this.GetComponent<PauseGUI> ();
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
-		maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
 
-		SetMaxMapShow (false);
+
 	}
 
 /*---------------------------------------------------------------------------------------------------------------*/	
@@ -75,7 +81,7 @@ public class GUIManager : MonoBehaviour {
 	
 	void OnGUI ()
 	{
-		if (maxMapShow == true) 
+		if ((maxMapShow == true) && (useMaxMap) )
 		{
 			DrawMaxMap ();
 		} 
@@ -83,7 +89,9 @@ public class GUIManager : MonoBehaviour {
 		{
 			if (pauseGUI.GetShowPauseMenu() == false)
 			{
-				DrawMinMap ();
+				if(useMiniMap){
+					DrawMinMap ();
+				}
 			}
 		}
 	}

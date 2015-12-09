@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 	public KeyCode pauseKey;
 	public KeyCode changeCameraView;
 
+	//set yes if scene use maxmap or minimap
+	public bool useMaxMap;
 
 	private bool isPause;
 
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown(mapKey) ) {
+		if ((Input.GetKeyDown(mapKey) ) && (useMaxMap)) {
 			if ((!guiManager.GetMaxMapShow()) && !isPause)
 			{
 				guiManager.SetMaxMapShow(true);

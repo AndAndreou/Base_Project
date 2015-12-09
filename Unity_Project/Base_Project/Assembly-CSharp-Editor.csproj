@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\VisSky\Editor\VisSky_Editor.cs" />
      <None Include="Assets\readme.txt" />
+     <None Include="Assets\_Creepy_Cat\_3D_Office\_Docs\Doc.txt" />
      <None Include="Assets\Shaders\SportyGirl\SkinShader.shader" />
      <None Include="Assets\VisSky\readme.txt" />
      <None Include="Assets\VisSky\Shaders\SkyGradient.shader" />

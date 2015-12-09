@@ -187,17 +187,17 @@ public class CameraController : MonoBehaviour {
 		Vector3 startPosRay = checkPos; 
 		Vector3 RayDirection = targetTransform.position - checkPos;//new vector 3 exi sxesi me to ipsos tou player
 		
-		isRayHit = Physics.Raycast (startPosRay, RayDirection, out RayHit, Vector3.Distance(targetTransform.position,checkPos) /*relCameraPosMag*/);
+		isRayHit = Physics.Raycast (startPosRay, RayDirection, out RayHit, Vector3.Distance(targetTransform.position,checkPos) );
 
 		if (isRayHit) 
 		{
-			Debug.DrawLine (startPosRay, RayHit.transform.position , Color.red);
+			//Debug.DrawLine (startPosRay, RayHit.transform.position , Color.red);
 			//Debug.Log (RayHit.transform.tag );
 			if (RayHit.transform.tag == GameRepository.GetMainCameraTag ())
 			{
 				return true;
 			}
-			if (RayHit.transform.tag != GameRepository.GetPlayerTag ()) 
+			if ((RayHit.transform.tag != GameRepository.GetPlayerTag ()) && (RayHit.collider.isTrigger == false) )
 			{
 				return false;
 			}
@@ -216,14 +216,14 @@ public class CameraController : MonoBehaviour {
 		bool isRayHit2 = false;
 		RaycastHit RayHit2;
 		Vector3 startPosRay2 = targetTransform.position ; 
-		Vector3 RayDirection2 = checkPos - targetTransform.position ;//new vector 3 exi sxesi me to ipsos tou player
+		Vector3 RayDirection2 = checkPos - targetTransform.position ;
 
-		isRayHit2 = Physics.Raycast (startPosRay2, RayDirection2, out RayHit2, Vector3.Distance(checkPos,targetTransform.position)/*relCameraPosMag*/);
+		isRayHit2 = Physics.Raycast (startPosRay2, RayDirection2, out RayHit2, Vector3.Distance(checkPos,targetTransform.position));
 
 		if (isRayHit2) 
 		{
 			Debug.DrawLine (startPosRay2, RayHit2.transform.position , Color.green);
-			if (RayHit2.transform.tag != GameRepository.GetMainCameraTag ()) 
+			if ((RayHit2.transform.tag != GameRepository.GetMainCameraTag ()) && (RayHit2.collider.isTrigger == false) )
 			{
 				//Debug.Log(RayHit2.transform.tag);
 				return false;

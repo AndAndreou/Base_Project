@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\OfficeMegaKit\Office Tile Kit\Scripts\SimpleDoorTrigger.cs" />
      <Compile Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\MirrorReflection.cs" />
+     <Compile Include="Assets\Scripts\AI_Characters\Speak.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\DBManager.cs" />
      <Compile Include="Assets\Scripts\FPSCounter.cs" />
@@ -63,6 +64,7 @@
      <Compile Include="Assets\VisSky\Scripts\CloudCam.cs" />
      <Compile Include="Assets\VisSky\Scripts\VisSky.cs" />
      <None Include="Assets\readme.txt" />
+     <None Include="Assets\_Creepy_Cat\_3D_Office\_Docs\Doc.txt" />
      <None Include="Assets\Shaders\SportyGirl\SkinShader.shader" />
      <None Include="Assets\VisSky\readme.txt" />
      <None Include="Assets\VisSky\Shaders\SkyGradient.shader" />

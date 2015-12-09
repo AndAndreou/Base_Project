@@ -25,10 +25,20 @@ public class DBManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		/*
+		//cs.ucy DB Server (need vpn)
 		server = "dbserver.in.cs.ucy.ac.cy";
 		database = "basedb";
 		uid = "basedb";
 		password = "FMZBQbGpus";
+		*/
+
+		//Haris DB Server
+		server = "192.185.119.216";
+		database = "wwwbasep_unitydb";
+		uid = "wwwbaseproject";
+		password = "baseproject321#";
+
 		string connectionString;
 		connectionString = "SERVER=" + server + ";" + 
 			"DATABASE=" + database + ";" + 
