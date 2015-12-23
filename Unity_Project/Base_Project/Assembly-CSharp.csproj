@@ -48,19 +48,25 @@
   <ItemGroup>
      <Compile Include="Assets\OfficeMegaKit\Office Tile Kit\Scripts\SimpleDoorTrigger.cs" />
      <Compile Include="Assets\OfficeMegaKit\OfficeBathroomKit\MirrorAsset\MirrorReflection.cs" />
-     <Compile Include="Assets\Scripts\AI_Characters\Speak.cs" />
+     <Compile Include="Assets\Scripts\AI_Characters\Do_Question.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\DBInfo.cs" />
      <Compile Include="Assets\Scripts\DBManager.cs" />
      <Compile Include="Assets\Scripts\FPSCounter.cs" />
      <Compile Include="Assets\Scripts\FreeflightCamera.cs" />
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRepository.cs" />
+     <Compile Include="Assets\Scripts\GoToLevel.cs" />
      <Compile Include="Assets\Scripts\LoginGUI.cs" />
      <Compile Include="Assets\Scripts\MainMenuManager.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
      <Compile Include="Assets\Scripts\PauseGUI.cs" />
      <Compile Include="Assets\Scripts\SportyGirl\CharacterController.cs" />
+     <Compile Include="Assets\Scripts\Structures\AStruct.cs" />
+     <Compile Include="Assets\Scripts\Structures\QStruct.cs" />
+     <Compile Include="Assets\Scripts\Structures\Q_AStruct.cs" />
+     <Compile Include="Assets\Scripts\Structures\TwoInt.cs" />
      <Compile Include="Assets\VisSky\Scripts\CloudCam.cs" />
      <Compile Include="Assets\VisSky\Scripts\VisSky.cs" />
      <None Include="Assets\readme.txt" />

@@ -143,6 +143,7 @@ public class LoginGUI : MonoBehaviour {
 
 			if(showWaitMsg) GUI.enabled =false;
 			if (GUI.Button (new Rect (0, boxSize.y * 2, buttonSize.x, buttonSize.y), "Sing Up")) {
+				SingUp(userName, password);
 			}
 
 			if(showWaitMsg) GUI.enabled =false;
@@ -161,6 +162,8 @@ public class LoginGUI : MonoBehaviour {
 
 		} 
 		else if (loginState == LoginState.SingUP) {
+
+
 		} 
 		else if (loginState == LoginState.LoadScene) {
 			title = "Loading...";
@@ -199,8 +202,26 @@ public class LoginGUI : MonoBehaviour {
 	/*---------------------------------------------------------------------------------------------------------------*/
 	private void CheckLogin(string userName,string password){
 		string msg;
-		showWaitMsg = true;
+		//showWaitMsg = true;
 		msg = dbManager.CheckLogin (userName, password);
+		if (msg == "OK") {
+			loginState = LoginState.LoadScene;
+			showWaitMsg = false;
+			StartCoroutine (LoadScene ("menu(main)_scene"));
+		} 
+		else {
+			errorMsg = msg;
+			showErrorMsg = true;
+			showWaitMsg = false;
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	private void SingUp(string userName,string password){
+		string msg;
+		//showWaitMsg = true;
+		msg = dbManager.SingUp (userName, password);
 		if (msg == "OK") {
 			loginState = LoginState.LoadScene;
 			showWaitMsg = false;

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 	private CameraController cameraController;
 
 	//keys
-	public KeyCode exitApplication;
+	public KeyCode closeTab;
 	public KeyCode mapKey;
 	public KeyCode pauseKey;
 	public KeyCode changeCameraView;
@@ -30,12 +30,13 @@ public class GameManager : MonoBehaviour {
 
 		Time.timeScale = 1;
 		Cursor.visible = false; 
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		if (Input.GetKeyDown(exitApplication) ) {
+		if (Input.GetKeyDown(closeTab) ) {
 			if(guiManager.GetMaxMapShow())
 			{
 				guiManager.SetMaxMapShow(false);
@@ -47,10 +48,10 @@ public class GameManager : MonoBehaviour {
 				pauseGUI.SetShowPauseMenu (false);
 				UnPause();
 			}
-			else
-			{
-				Application.Quit();
-			}
+			//else
+			//{
+			//	Application.Quit();
+			//}
 		}
 
 		if ((Input.GetKeyDown(mapKey) ) && (useMaxMap)) {

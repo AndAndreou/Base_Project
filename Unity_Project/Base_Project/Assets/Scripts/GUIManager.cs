@@ -36,8 +36,10 @@ public class GUIManager : MonoBehaviour {
 	public float fontSizeButton = 0.01f; // % of screen range 0-1
 	public float titlefontSize = 0.02f; // % of screen range 0-1
 
+	//skins
 	public GUISkin maxMapSkin;
 	public GUISkin teleportButtonSkin;
+
 
 	private Vector2 scrollPosition;
 
@@ -47,6 +49,23 @@ public class GUIManager : MonoBehaviour {
 	//set yes if scene use maxmap or minimap
 	public bool useMaxMap;
 	public bool useMiniMap;
+
+	//for loading 
+	public Texture2D emptyProgressBar; // for loading
+	public Texture2D fullProgressBar; // for loading
+
+	public Vector2 sizeLoadingBar;
+	public Vector2 loadingBarOffset;
+
+	private string title;
+	public Vector2 titleSize; // % of screen range 0-1
+	public Vector2 titleOffset;
+
+	public GUISkin mainMenuSkin;
+
+	private AsyncOperation async = null;
+
+	private bool loadLevel;
 
 	//private bool showPauseMenu;
 
@@ -65,6 +84,8 @@ public class GUIManager : MonoBehaviour {
 		pauseGUI = this.GetComponent<PauseGUI> ();
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 
+		loadLevel = false;
+
 
 	}
 
@@ -81,6 +102,11 @@ public class GUIManager : MonoBehaviour {
 	
 	void OnGUI ()
 	{
+		if (loadLevel == true) {
+			LoadingProcess();
+			return;
+		}
+
 		if ((maxMapShow == true) && (useMaxMap) )
 		{
 			DrawMaxMap ();
@@ -276,4 +302,53 @@ public class GUIManager : MonoBehaviour {
 	{
 		parentTeleportPoints.SetActive (value);
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	public void LoadingProcess(){
+		title = "Loading...";
+
+		GUI.skin = mainMenuSkin;
+		mainMenuSkin.label.fontSize = Mathf.RoundToInt (Screen.width * titlefontSize);
+
+		//draw title
+		Vector2 caltitleSize = new Vector2 (Screen.width * titleSize.x, Screen.height * titleSize.y);
+		Vector2 titlePosition = new Vector2 (((Screen.width / 2) - (caltitleSize.x / 2)) + titleOffset.x, titleOffset.y);
+		Rect titleRect = new Rect (titlePosition, caltitleSize);
+		GUI.Label (titleRect, title);
+
+		Vector2 sizeLoadingTuxture;
+		Vector2 positionLoadingTuxture;
+		
+		sizeLoadingTuxture.x = Screen.width * sizeLoadingBar.x ;
+		sizeLoadingTuxture.y = Screen.height * sizeLoadingBar.y ;
+		
+		positionLoadingTuxture.x = (Screen.width / 2) - (sizeLoadingTuxture.x / 2);
+		positionLoadingTuxture.y = (Screen.height / 2) - (sizeLoadingTuxture.y / 2);
+		
+		if (async != null) {
+			GUI.DrawTexture(new Rect(positionLoadingTuxture.x, positionLoadingTuxture.y, sizeLoadingTuxture.x, sizeLoadingTuxture.y), emptyProgressBar);
+			GUI.DrawTexture(new Rect(positionLoadingTuxture.x, positionLoadingTuxture.y, sizeLoadingTuxture.x * async.progress, sizeLoadingTuxture.y), fullProgressBar);
+		}
+	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	public void LoadLavel(string name)
+	{
+		loadLevel = true;
+		gameManager.Pause ();
+		StartCoroutine (LoadScene (name));
+	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+	
+	//function for load scene
+	private IEnumerator LoadScene(string name)
+	{
+		async = Application.LoadLevelAsync(name);
+		yield return async;
+		
+	}
+
 }

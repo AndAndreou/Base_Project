@@ -44,7 +44,7 @@ public class CameraController : MonoBehaviour {
 	private float zoomFOV;
 	//--
 
-
+	private bool dontRunUpdate;
 
 	private enum CameraState
 	{
@@ -73,76 +73,80 @@ public class CameraController : MonoBehaviour {
 		maxZoomFOV = defaultFOV;
 		zoomFOV = (maxZoomFOV - minZoomFOV) / 2;
 
+		dontRunUpdate = false;
+
 	}
 	
 	// Update is called once per frame
 	void LateUpdate () {
 
 		if (gameManager.GetIsPause () == false) {
-			//angleH += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
-			angleH += Input.GetAxis ("Mouse X") * 5.0f;
-			angleV += Mathf.Clamp (Input.GetAxis ("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
+			if (dontRunUpdate == false) {
+				//angleH += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * horizontalAimingSpeed * Time.deltaTime;
+				angleH += Input.GetAxis ("Mouse X") * 5.0f;
+				angleV += Mathf.Clamp (Input.GetAxis ("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
 
-			angleV = Mathf.Clamp (angleV, minVerticalAngle, maxVerticalAngle);
+				angleV = Mathf.Clamp (angleV, minVerticalAngle, maxVerticalAngle);
 			
 			
-			Quaternion aimRotation = Quaternion.Euler (-angleV, angleH, 0);
-			Quaternion camYRotation = Quaternion.Euler (0, angleH, 0);
-			cam.rotation = aimRotation;
+				Quaternion aimRotation = Quaternion.Euler (-angleV, angleH, 0);
+				Quaternion camYRotation = Quaternion.Euler (0, angleH, 0);
+				cam.rotation = aimRotation;
 
-			//Set camera PivotOffset and PositionOffset
-			if (cameraState == CameraState.ThirdPerson) {
-				targetPivotOffset = thirdPersonPivotOffset;
-				targetCamOffset = thirdPersonPositionOffset;
-			} else if (cameraState == CameraState.FirstPerson) {
-				targetPivotOffset = firstPersonPivotOffset;
-				targetCamOffset = firstPersonPositionOffset;
-			}
-
-			//set FOV
-			if (characterController.IsZooming ()) {
-				if (Input.GetAxis ("Mouse ScrollWheel") < 0)
-					zoomFOV += changingZoomValueFOV;
-				if (Input.GetAxis ("Mouse ScrollWheel") > 0)
-					zoomFOV -= changingZoomValueFOV;
-
-				targetFOV = Mathf.Clamp (zoomFOV, minZoomFOV, maxZoomFOV);
-			} else if (characterController.IsSprinting ()) {
-				targetFOV = sprintFOV;
-			} else {
-				targetFOV = defaultFOV;
-			}
-
-			cam.GetComponent<Camera> ().fieldOfView = Mathf.Lerp (cam.GetComponent<Camera> ().fieldOfView, targetFOV, Time.deltaTime);
-
-			// Test for collision
-			if (cameraState == CameraState.ThirdPerson) {
-				bool flag = true;
-				Vector3 baseTempPosition = targetTransform.position + camYRotation * targetPivotOffset;
-				Vector3 tempOffset = targetCamOffset;
-				for (float zOffset = targetCamOffset.z; zOffset < 0; zOffset += 0.5f) {
-					tempOffset.z = zOffset;
-					if (DoubleViewingPosCheck (baseTempPosition + aimRotation * tempOffset)) {
-						targetCamOffset.z = tempOffset.z;
-						flag = false;
-						break;
-					}
-
-				}
-				//if not find some position set as first person 
-
-				if (flag) {
+				//Set camera PivotOffset and PositionOffset
+				if (cameraState == CameraState.ThirdPerson) {
+					targetPivotOffset = thirdPersonPivotOffset;
+					targetCamOffset = thirdPersonPositionOffset;
+				} else if (cameraState == CameraState.FirstPerson) {
 					targetPivotOffset = firstPersonPivotOffset;
 					targetCamOffset = firstPersonPositionOffset;
 				}
+
+				//set FOV
+				if (characterController.IsZooming ()) {
+					if (Input.GetAxis ("Mouse ScrollWheel") < 0)
+						zoomFOV += changingZoomValueFOV;
+					if (Input.GetAxis ("Mouse ScrollWheel") > 0)
+						zoomFOV -= changingZoomValueFOV;
+
+					targetFOV = Mathf.Clamp (zoomFOV, minZoomFOV, maxZoomFOV);
+				} else if (characterController.IsSprinting ()) {
+					targetFOV = sprintFOV;
+				} else {
+					targetFOV = defaultFOV;
+				}
+
+				cam.GetComponent<Camera> ().fieldOfView = Mathf.Lerp (cam.GetComponent<Camera> ().fieldOfView, targetFOV, Time.deltaTime);
+
+				// Test for collision
+				if (cameraState == CameraState.ThirdPerson) {
+					bool flag = true;
+					Vector3 baseTempPosition = targetTransform.position + camYRotation * targetPivotOffset;
+					Vector3 tempOffset = targetCamOffset;
+					for (float zOffset = targetCamOffset.z; zOffset < 0; zOffset += 0.5f) {
+						tempOffset.z = zOffset;
+						if (DoubleViewingPosCheck (baseTempPosition + aimRotation * tempOffset)) {
+							targetCamOffset.z = tempOffset.z;
+							flag = false;
+							break;
+						}
+
+					}
+					//if not find some position set as first person 
+
+					if (flag) {
+						targetPivotOffset = firstPersonPivotOffset;
+						targetCamOffset = firstPersonPositionOffset;
+					}
+				}
+
+				//Set smooth  interpolation
+				smoothPivotOffset = Vector3.Lerp (smoothPivotOffset, targetPivotOffset, smooth * Time.deltaTime);
+				smoothCamOffset = Vector3.Lerp (smoothCamOffset, targetCamOffset, smooth * Time.deltaTime);
+
+				//Set camera position
+				cam.position = targetTransform.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
 			}
-
-			//Set smooth  interpolation
-			smoothPivotOffset = Vector3.Lerp (smoothPivotOffset, targetPivotOffset, smooth * Time.deltaTime);
-			smoothCamOffset = Vector3.Lerp (smoothCamOffset, targetCamOffset, smooth * Time.deltaTime);
-
-			//Set camera position
-			cam.position = targetTransform.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
 		}
 
 	}
@@ -232,4 +236,12 @@ public class CameraController : MonoBehaviour {
 		return true;
 
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public void SetDontRunUptade(bool value){
+		dontRunUpdate = value;
+	}
 }
+
+

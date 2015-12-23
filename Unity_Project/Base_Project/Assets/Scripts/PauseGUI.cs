@@ -54,6 +54,15 @@ public class PauseGUI : MonoBehaviour {
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 	}
 
+	void Update(){
+		/*if (showPauseMenu == true) {
+			Cursor.visible = true;
+		}
+		else {
+			Cursor.visible = false; 
+		}*/
+	}
+
 /*---------------------------------------------------------------------------------------------------------------*/	
 
 	void OnGUI ()

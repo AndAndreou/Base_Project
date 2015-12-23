@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 
@@ -20,7 +21,8 @@ public class DBManager : MonoBehaviour {
 	private string playerUserName;
 	private string playerPassword;
 	private int playerUserID;
-	
+
+	private AsyncOperation async = null;
 
 	// Use this for initialization
 	void Start () {
@@ -47,7 +49,9 @@ public class DBManager : MonoBehaviour {
 		
 		con = new MySqlConnection(connectionString);
 	}
-	
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+	 
 	// Update is called once per frame
 	void Update () {
 		/*if (Input.GetKeyDown(dbConnect)) {
@@ -80,6 +84,8 @@ public class DBManager : MonoBehaviour {
 			}
 		}*/
 	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
 
 	private bool OpenConnection()
 	{
@@ -113,6 +119,8 @@ public class DBManager : MonoBehaviour {
 		}
 	}
 	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 	//Close connection
 	private bool CloseConnection()
 	{
@@ -127,8 +135,12 @@ public class DBManager : MonoBehaviour {
 			return false;
 		}
 	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 	//Insert statement
 	public void Insert(string query)
+	//public IEnumerator Insert(string query)
 	{
 		//string query = "INSERT INTO tableinfo (name, age) VALUES('John Smith', '33')";
 		
@@ -140,12 +152,15 @@ public class DBManager : MonoBehaviour {
 			
 			//Execute command
 			cmd.ExecuteNonQuery();
-			
+
 			//close connection
 			this.CloseConnection();
+			//yield return async;
 		}
 	}
 	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 	//Update statement
 	public void Update(string query)
 	{
@@ -169,6 +184,8 @@ public class DBManager : MonoBehaviour {
 		}
 	}
 	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 	//Delete statement
 	public void Delete(string query)
 	{
@@ -181,6 +198,8 @@ public class DBManager : MonoBehaviour {
 			this.CloseConnection();
 		}
 	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
 
 	//Count statement
 	public int Count()
@@ -207,10 +226,12 @@ public class DBManager : MonoBehaviour {
 			return Count;
 		}
 	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
 
 	public string CheckLogin(string username, string pass){
 
-		string cmdText = "SELECT * FROM LoginTable lt WHERE lt.UserName = '" + username + "' AND lt.Password = '" + pass + "'";
+		string cmdText = "SELECT * FROM users ur WHERE ur.username = '" + username + "' AND ur.password = '" + pass + "'";
 
 		//Open Connection
 		if (this.OpenConnection() == true)
@@ -228,15 +249,20 @@ public class DBManager : MonoBehaviour {
 
 			if (reader.Read())
 			{
-				playerUserID = int.Parse(reader.GetString(0));
+				playerUserID = int.Parse(reader.GetString(4));
 				Debug.Log(playerUserID);
 				playerUserName = username;
-				playerPassword =pass;
+				playerPassword = pass;
 				returnMsg = "OK";
+
+				DBInfo.SetUsername(playerUserName);
+				DBInfo.SetPassword(pass);
+				DBInfo.SetID(playerUserID);
+
 			}
 			else
 			{
-				returnMsg = "UserName or Password error";
+				returnMsg = "UserName or Password in not correct";
 			}
 
 			//close Connection
@@ -247,7 +273,104 @@ public class DBManager : MonoBehaviour {
 		}
 		else
 		{
+			this.CloseConnection();
 			return ("DataBase can not connect");
 		}
 	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public string SingUp(string username, string pass){
+		string query = "INSERT INTO users (username, password) VALUES('" + username + "', '" + pass + "')";
+		try
+		{
+			Insert (query);
+			return "OK";
+		}
+		catch (MySqlException ex)
+		{
+			this.CloseConnection();
+			return "UserName or Password not invalid";
+		}
+		//return "";
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public List<Q_AStruct> GetQandA(int seqno){
+
+		//Dictionary<QStruct,List<AStruct>> QandA = new Dictionary<QStruct,List<AStruct>>();
+		List<Q_AStruct> QandA = new List<Q_AStruct> ();
+		List<QStruct> qstruct = new List<QStruct> ();
+
+
+		string cmdText = "SELECT * FROM questions qs WHERE qs.section_section_id = '" + seqno + "'";
+		
+		//Open Connection
+		if (this.OpenConnection () == true) {
+			//string returnMsg;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader (); 
+
+			while (reader.Read()) {
+				//reader.GetString(0) will get the value of the first column of the table myTable because we selected all columns using SELECT * (all); the first loop of the while loop is the first row; the next loop will be the second row and so on...
+				//Debug.Log (reader.GetString (0) + " " + reader.GetString (1) + " " + reader.GetString (3)); 
+
+				qstruct.Add(new QStruct (reader.GetString (1),int.Parse(reader.GetString (0))));
+
+			}
+		
+			this.CloseConnection ();
+		}
+
+		//foreach (QStruct q in qstruct) {
+		for (int i=0; i< qstruct.Count;i++){
+			List<AStruct> astruct = new List<AStruct> ();
+			//Open Connection
+			if (this.OpenConnection () == true) {
+				string cmdText2 = "SELECT * FROM answers aw WHERE aw.questions_question_id = '" + qstruct[i].qno + "'";
+				MySqlDataReader reader2 = null;
+				MySqlCommand cmd2 = new MySqlCommand (cmdText2, con);
+				reader2 = cmd2.ExecuteReader ();
+				while (reader2.Read()) {
+					//Debug.Log ("-----> " + reader2.GetString (0) + " " + reader2.GetString (1));
+					astruct.Add(new AStruct(reader2.GetString (1),int.Parse(reader2.GetString (0))));
+				}
+				this.CloseConnection ();
+			}
+			QandA.Add(new Q_AStruct(qstruct[i],astruct));
+		}
+
+		return QandA;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public void AddUserAnswers(List<TwoInt> userAnswers){
+		for (int i=0; i<userAnswers.Count; i++) {
+			Debug.Log(DBInfo.GetID());
+			string query = "INSERT INTO game_round (users_user_id, questions_question_id, answers_answer_id) VALUES('" + DBInfo.GetID() + "', '" + userAnswers[i].questionNo + "', '" + userAnswers[i].answerNo + "')";
+			try
+			{
+				Insert(query);
+				//StartCoroutine (Insert(query));
+			}
+			catch (MySqlException ex)
+			{
+				Debug.Log("Error Insert");
+				this.CloseConnection();
+				
+			}
+		}
+
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 }
