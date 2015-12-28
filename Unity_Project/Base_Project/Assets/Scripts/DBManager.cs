@@ -358,6 +358,7 @@ public class DBManager : MonoBehaviour {
 			string query = "INSERT INTO game_round (users_user_id, questions_question_id, answers_answer_id) VALUES('" + DBInfo.GetID() + "', '" + userAnswers[i].questionNo + "', '" + userAnswers[i].answerNo + "')";
 			try
 			{
+				Debug.Log(":::::::::::::::::::::::::::::::::::::");
 				Insert(query);
 				//StartCoroutine (Insert(query));
 			}
