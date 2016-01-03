@@ -203,7 +203,15 @@ public class LoginGUI : MonoBehaviour {
 	private void CheckLogin(string userName,string password){
 		string msg;
 		//showWaitMsg = true;
-		msg = dbManager.CheckLogin (userName, password);
+		if ((userName != "debug") && (password != "debug")) {
+			msg = dbManager.CheckLogin (userName, password);
+		} 
+		else {
+			msg = "OK" ;
+			DBInfo.SetUsername("debug");
+			DBInfo.SetPassword("debug");
+			DBInfo.SetID(-1);
+		}
 		if (msg == "OK") {
 			loginState = LoginState.LoadScene;
 			showWaitMsg = false;

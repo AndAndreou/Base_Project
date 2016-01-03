@@ -161,17 +161,19 @@ public class Do_Question : MonoBehaviour {
 
 			//Debug.Log(Mathf.Abs (Vector3.Distance (targetTransform.position, this.transform.position)) >= distanceForUpdate);
 			//Debug.Log("havechange : " + haveChange);
-			if (sectionNo>=0){
-				if (Mathf.Abs (Vector3.Distance (targetTransform.position, this.transform.position)) >= distanceForUpdate) {
-					if(haveChange == true){
-						Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++");
-						List<TwoInt> updateAnswerUser = new List<TwoInt>();
-						for(int i=0; i < currentQuestion ; i++){
-							updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
+			if (DBInfo.GetID() != -1){
+				if (sectionNo>=0){
+					if (Mathf.Abs (Vector3.Distance (targetTransform.position, this.transform.position)) >= distanceForUpdate) {
+						if(haveChange == true){
+							Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++");
+							List<TwoInt> updateAnswerUser = new List<TwoInt>();
+							for(int i=0; i < currentQuestion ; i++){
+								updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
+							}
+							lastUpdateQuestion = currentQuestion;
+							haveChange = false;
+							dbManager.AddUserAnswers(updateAnswerUser);
 						}
-						lastUpdateQuestion = currentQuestion;
-						haveChange = false;
-						dbManager.AddUserAnswers(updateAnswerUser);
 					}
 				}
 			}
@@ -184,8 +186,9 @@ public class Do_Question : MonoBehaviour {
 	void OnGUI(){
 		if (gameManager.GetIsPause () == false) {
 
-			if (!init || !flagDistance)
+			if (!init || !flagDistance){
 				return;
+			}
 
 			//show text if player is close
 			if (!flagPressButton) {

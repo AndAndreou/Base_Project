@@ -9,7 +9,7 @@ public class GameRepository : MonoBehaviour {
 	private string gameManagerTag = "GameManager";
 	private string GUIManagerTag = "GUIManager";
 	private string teleportPointTag = "TeleportPoint";
-	private string playerTag = "Player";
+	private string playerTag = "Player1";
 	private string parentTeleportPointsTag = "ParentTeleportPoints";
 	private string mapCameraTag = "MapCamera";
 	private string mainCameraTag = "MainCamera";

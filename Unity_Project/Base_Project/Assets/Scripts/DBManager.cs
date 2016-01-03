@@ -285,6 +285,9 @@ public class DBManager : MonoBehaviour {
 		try
 		{
 			Insert (query);
+			this.CloseConnection();
+
+			CheckLogin(username,pass);
 			return "OK";
 		}
 		catch (MySqlException ex)
