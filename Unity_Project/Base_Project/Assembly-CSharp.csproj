@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\MainMenuManager.cs" />
      <Compile Include="Assets\Scripts\Minimap\MinimapCameraMovement.cs" />
      <Compile Include="Assets\Scripts\PauseGUI.cs" />
+     <Compile Include="Assets\Scripts\SoundManager.cs" />
      <Compile Include="Assets\Scripts\SportyGirl\CharacterController.cs" />
      <Compile Include="Assets\Scripts\Structures\AStruct.cs" />
      <Compile Include="Assets\Scripts\Structures\QStruct.cs" />
@@ -87,7 +88,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="MySql.Data">
- <HintPath>C:/Users/aandr/Documents/GitHub/Base_Project/Unity_Project/Base_Project/Assets/DLL/MySql.Data.dll</HintPath>
+ <HintPath>D:/GitHub/Base_Project/Base_Project/Unity_Project/Base_Project/Assets/DLL/MySql.Data.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
