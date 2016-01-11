@@ -239,7 +239,7 @@ public class CameraController : MonoBehaviour {
 
 /*---------------------------------------------------------------------------------------------------------------*/
 	
-	public void SetDontRunUptade(bool value){
+	public void SetDontRunUpdate(bool value){
 		dontRunUpdate = value;
 	}
 }

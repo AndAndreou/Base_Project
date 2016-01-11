@@ -3,6 +3,11 @@ using System.Collections;
 
 public class LoginGUI : MonoBehaviour {
 
+	public Texture baseLogo;
+	public Texture erasmusLogo;
+
+	public Vector2 sizelogo;
+
 	public Vector2 titleSizeForLogin; // % of screen range 0-1
 	public Vector2 titleForLoginOffset;
 
@@ -21,7 +26,7 @@ public class LoginGUI : MonoBehaviour {
 	private enum LoginState
 	{
 		Login,
-		SingUP,
+		SignUp,
 		LoadScene,
 		Exit
 	}
@@ -44,6 +49,8 @@ public class LoginGUI : MonoBehaviour {
 
 	private string userName = "";
 	private string password = "";
+	private string year_of_birth = "";
+	private string country = "";
 	private DBManager dbManager;
 	
 	private bool showErrorMsg = false;
@@ -97,11 +104,15 @@ public class LoginGUI : MonoBehaviour {
 	void OnGUI () {
 		//draw background
 		DrawBackground ();
+
+		//print logos
+		DrawLogos ();
 		
 		//load-set skin
 		GUI.skin = loginSkin;
 		loginSkin.button.fontSize = Mathf.RoundToInt (Screen.width * fontSize);
 		loginSkin.textArea.fontSize = Mathf.RoundToInt (Screen.width * fontSize);
+		loginSkin.textField.fontSize = Mathf.RoundToInt (Screen.width * fontSize);
 		loginSkin.box.fontSize = Mathf.RoundToInt (Screen.width * fontSize);
 		loginSkin.label.fontSize = Mathf.RoundToInt (Screen.width * titlefontSize);
 		//loginSkin.button.fixedWidth = Screen.width * sizeButtonLogin.x;
@@ -139,11 +150,18 @@ public class LoginGUI : MonoBehaviour {
 
 			if(showWaitMsg) GUI.enabled =false;
 			GUI.Box (new Rect (0, boxSize.y, boxSize.x, boxSize.y), "Password");
-			password = GUI.TextArea (new Rect (boxSize.x, boxSize.y, textAreaSize.x, textAreaSize.y), password);
+			//password = GUI.TextArea (new Rect (boxSize.x, boxSize.y, textAreaSize.x, textAreaSize.y), password);
+			password = GUI.PasswordField(new Rect(boxSize.x, boxSize.y, textAreaSize.x, textAreaSize.y), password, "*"[0], 20);
 
 			if(showWaitMsg) GUI.enabled =false;
-			if (GUI.Button (new Rect (0, boxSize.y * 2, buttonSize.x, buttonSize.y), "Sing Up")) {
-				SingUp(userName, password);
+			if (GUI.Button (new Rect (0, boxSize.y * 2, buttonSize.x, buttonSize.y), "Exit")) {
+				loginState = LoginState.Exit;
+			}
+
+			if(showWaitMsg) GUI.enabled =false;
+			if (GUI.Button (new Rect (buttonSize.x, boxSize.y * 2, buttonSize.x, buttonSize.y), "Sing Up")) {
+				//SignUp(userName, password);
+				loginState = LoginState.SignUp;
 			}
 
 			if(showWaitMsg) GUI.enabled =false;
@@ -161,8 +179,57 @@ public class LoginGUI : MonoBehaviour {
 			}
 
 		} 
-		else if (loginState == LoginState.SingUP) {
+		else if (loginState == LoginState.SignUp) {
 
+			title = "SignUp";
+			int numOfrows = 5;
+			Vector2 groupSize = new Vector2 (Screen.width * loginGroupSize.x, Screen.height * loginGroupSize.y);
+			Vector2 groupPosition = new Vector2 (((Screen.width / 2) - (groupSize.x / 2)), ((Screen.height / 2) - (groupSize.y / 2)));
+			Rect groupRect = new Rect (groupPosition, groupSize);
+			
+			GUI.BeginGroup (groupRect);
+			
+			Vector2 boxSize;
+			boxSize.x = groupSize.x * (1.0f - textboxPercentage);
+			boxSize.y = groupSize.y / numOfrows;
+			Vector2 textAreaSize;
+			textAreaSize.x = groupSize.x * textboxPercentage;
+			textAreaSize.y = groupSize.y / numOfrows;
+			int numOfButtons = 3;
+			Vector2 buttonSize;
+			buttonSize.x = groupSize.x / numOfButtons;
+			buttonSize.y = groupSize.y / numOfrows;
+			
+			//if(showWaitMsg) GUI.enabled =false;
+			GUI.Box (new Rect (0, 0, boxSize.x, boxSize.y), "UserName");
+			userName = GUI.TextArea (new Rect (boxSize.x, 0, textAreaSize.x, textAreaSize.y), userName);
+			
+			//if(showWaitMsg) GUI.enabled =false;
+			GUI.Box (new Rect (0, boxSize.y, boxSize.x, boxSize.y), "Password");
+			//password = GUI.TextArea (new Rect (boxSize.x, boxSize.y, textAreaSize.x, textAreaSize.y), password);
+			password = GUI.PasswordField(new Rect(boxSize.x, boxSize.y, textAreaSize.x, textAreaSize.y), password, "*"[0], 20);
+
+			GUI.Box (new Rect (0, boxSize.y*2, boxSize.x, boxSize.y), "Year Of Birth");
+			year_of_birth = GUI.TextArea (new Rect (boxSize.x, boxSize.y*2, textAreaSize.x, textAreaSize.y), year_of_birth);
+
+			GUI.Box (new Rect (0, boxSize.y*3, boxSize.x, boxSize.y), "Country");
+			country = GUI.TextArea (new Rect (boxSize.x, boxSize.y*3, textAreaSize.x, textAreaSize.y), country);
+
+
+			//if(showWaitMsg) GUI.enabled =false;
+			if (GUI.Button (new Rect (0, boxSize.y * 4, buttonSize.x, buttonSize.y), "Back")) {
+				//SignUp(userName, password);
+				loginState = LoginState.Login;
+			}
+
+			
+			if(showWaitMsg) GUI.enabled =false;
+			if (GUI.Button (new Rect (buttonSize.x * 2, boxSize.y * 4, buttonSize.x, buttonSize.y), "Register")) {
+				SignUp(userName, password, year_of_birth, country);
+			}
+			
+			GUI.enabled =true;
+			GUI.EndGroup ();
 
 		} 
 		else if (loginState == LoginState.LoadScene) {
@@ -181,6 +248,9 @@ public class LoginGUI : MonoBehaviour {
 				GUI.DrawTexture (new Rect (positionLoadingTuxture.x, positionLoadingTuxture.y, sizeLoadingTuxture.x, sizeLoadingTuxture.y), emptyProgressBar);
 				GUI.DrawTexture (new Rect (positionLoadingTuxture.x, positionLoadingTuxture.y, sizeLoadingTuxture.x * async.progress, sizeLoadingTuxture.y), fullProgressBar);
 			}
+		}
+		else if (loginState==LoginState.Exit){
+			Application.Quit();
 		}
 
 		if (showWaitMsg) {
@@ -226,10 +296,11 @@ public class LoginGUI : MonoBehaviour {
 
 	/*---------------------------------------------------------------------------------------------------------------*/
 
-	private void SingUp(string userName,string password){
+	private void SignUp(string userName,string password, string year_of_birth, string country){
 		string msg;
 		//showWaitMsg = true;
-		msg = dbManager.SingUp (userName, password);
+
+		msg = dbManager.SignUp (userName, password, year_of_birth, country);
 		if (msg == "OK") {
 			loginState = LoginState.LoadScene;
 			showWaitMsg = false;
@@ -242,6 +313,22 @@ public class LoginGUI : MonoBehaviour {
 		}
 	}
 
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	private void DrawLogos (){
+
+		Vector2 realSizeLogo;
+		realSizeLogo.x = Screen.width * sizelogo.x;
+		realSizeLogo.y = Screen.height * sizelogo.y;
+
+		Vector2 tempforposition;
+		tempforposition.x =  realSizeLogo.x + 10;
+		tempforposition.y = Screen.height - realSizeLogo.y - 10;
+
+		GUI.DrawTexture(new Rect( Screen.width - tempforposition.x * 2, tempforposition.y, realSizeLogo.x, realSizeLogo.y), baseLogo, ScaleMode.ScaleToFit, true);
+		GUI.DrawTexture(new Rect( Screen.width - tempforposition.x, tempforposition.y, realSizeLogo.x, realSizeLogo.y), erasmusLogo, ScaleMode.ScaleToFit, true);
+	}
+	
 	/*---------------------------------------------------------------------------------------------------------------*/
 	//function for load scene
 	private IEnumerator LoadScene(string name)

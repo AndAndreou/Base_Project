@@ -12,20 +12,21 @@ public class DBManager : MonoBehaviour {
 	 * 
 	 */
 	private MySqlConnection con = null;
-	private MySqlDataReader reader = null;
+	//private MySqlDataReader reader = null;
 	private string server;
 	private string database;
 	private string uid;
 	private string password;
+	private string connectionString;
 
-	private string playerUserName;
-	private string playerPassword;
-	private int playerUserID;
+	//private string playerUserName;
+	//private string playerPassword;
+	//private int playerUserID;
 
 	private AsyncOperation async = null;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
 		/*
 		//cs.ucy DB Server (need vpn)
@@ -41,7 +42,6 @@ public class DBManager : MonoBehaviour {
 		uid = "wwwbaseproject";
 		password = "baseproject321#";
 
-		string connectionString;
 		connectionString = "SERVER=" + server + ";" + 
 			"DATABASE=" + database + ";" + 
 				"UID=" + uid + ";" + 
@@ -143,18 +143,26 @@ public class DBManager : MonoBehaviour {
 	//public IEnumerator Insert(string query)
 	{
 		//string query = "INSERT INTO tableinfo (name, age) VALUES('John Smith', '33')";
-		
+		Debug.Log ("test");
 		//open connection
 		if (this.OpenConnection() == true)
 		{
-			//create command and assign the query and connection from the constructor
-			MySqlCommand cmd = new MySqlCommand(query, con);
-			
-			//Execute command
-			cmd.ExecuteNonQuery();
+			try
+			{
+				//create command and assign the query and connection from the constructor
+				MySqlCommand cmd = new MySqlCommand(query, con);
+				//Execute command
+				cmd.ExecuteNonQuery();
+				//close connection
+				this.CloseConnection();
+			}
+			catch (MySqlException ex)
+			{
+				Debug.Log(ex.ToString());
+				//close connection
+				this.CloseConnection();
+			}
 
-			//close connection
-			this.CloseConnection();
 			//yield return async;
 		}
 	}
@@ -228,6 +236,39 @@ public class DBManager : MonoBehaviour {
 	}
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
+		
+	public int FindGameRound(int playerID){
+
+		string cmdText = "SELECT MAX(gr.game_round_id) FROM game_round gr WHERE gr.users_user_id = '" + playerID + "'";
+		int gameRound = -1;
+
+		//Open Connection
+		if (this.OpenConnection () == true) {
+			string returnMsg;
+			MySqlDataReader reader = null;
+
+
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader (); 
+
+
+			if (reader.Read ()) {
+				gameRound = int.Parse (reader.GetString (0));
+			}
+
+			return gameRound;
+		} 
+		else {
+			return -1;
+		}
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
 
 	public string CheckLogin(string username, string pass){
 
@@ -249,24 +290,25 @@ public class DBManager : MonoBehaviour {
 
 			if (reader.Read())
 			{
-				playerUserID = int.Parse(reader.GetString(4));
-				Debug.Log(playerUserID);
-				playerUserName = username;
-				playerPassword = pass;
+				int playerUserID = int.Parse(reader.GetString(3));
+				string playerUserName = username;
+				string playerPassword = pass;
 				returnMsg = "OK";
 
 				DBInfo.SetUsername(playerUserName);
-				DBInfo.SetPassword(pass);
+				DBInfo.SetPassword(playerPassword);
 				DBInfo.SetID(playerUserID);
+
+				this.CloseConnection();
+
+				SetGameRound(playerUserID);
 
 			}
 			else
 			{
+				this.CloseConnection();
 				returnMsg = "UserName or Password in not correct";
 			}
-
-			//close Connection
-			this.CloseConnection();
 
 			return returnMsg;
 		
@@ -280,14 +322,40 @@ public class DBManager : MonoBehaviour {
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
 
-	public string SingUp(string username, string pass){
-		string query = "INSERT INTO users (username, password) VALUES('" + username + "', '" + pass + "')";
+	private void SetGameRound(int playerUserID){
+
+		//insert gameround
+		string query = "INSERT INTO game_round (users_user_id) VALUES('" + playerUserID + "')";
 		try
 		{
 			Insert (query);
+			int gameRound = FindGameRound(playerUserID);
+			if (gameRound!= -1 ){
+				DBInfo.SetGameRoundId(gameRound);
+				Debug.Log(DBInfo.GetGameRoundId());
+			}
+		}
+		catch (MySqlException ex)
+		{
+			this.CloseConnection();
+		}
+
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public string SignUp(string username, string pass, string year_of_birth, string country){
+
+		string query = "INSERT INTO users (username, password, year_of_birth, country) VALUES('" + username + "', '" + pass + "', '" + year_of_birth + "', '" + country + "')";
+		try
+		{
+			Insert (query);
+
 			this.CloseConnection();
 
 			CheckLogin(username,pass);
+
 			return "OK";
 		}
 		catch (MySqlException ex)
@@ -358,7 +426,7 @@ public class DBManager : MonoBehaviour {
 	public void AddUserAnswers(List<TwoInt> userAnswers){
 		for (int i=0; i<userAnswers.Count; i++) {
 			Debug.Log(DBInfo.GetID());
-			string query = "INSERT INTO game_round (users_user_id, questions_question_id, answers_answer_id) VALUES('" + DBInfo.GetID() + "', '" + userAnswers[i].questionNo + "', '" + userAnswers[i].answerNo + "')";
+			string query = "INSERT INTO game_round_answers (game_round_game_round_id, questions_question_id, answers_answer_id) VALUES('" + DBInfo.GetGameRoundId() + "', '" + userAnswers[i].questionNo + "', '" + userAnswers[i].answerNo + "')";
 			try
 			{
 				Debug.Log(":::::::::::::::::::::::::::::::::::::");

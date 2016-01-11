@@ -15,6 +15,9 @@ public class GameRepository : MonoBehaviour {
 	private string mainCameraTag = "MainCamera";
 	private string DBManagerTag = "DBManager";
 
+	public float volumeLevel = 10.0f; 
+
+
 	//private int currentLevel=1;
 	
 	// Explicit static constructor to tell C# compiler
@@ -98,4 +101,14 @@ public class GameRepository : MonoBehaviour {
 
 	/*---------------------------------------------------------------------------------------------------------------*/
 
+	public static float GetVolumeLevel(){
+		return instance.volumeLevel;
+	}
+		
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public static float SetVolumeLevel(float vl){
+		instance.volumeLevel = vl;
+		return instance.volumeLevel;
+	}
 }

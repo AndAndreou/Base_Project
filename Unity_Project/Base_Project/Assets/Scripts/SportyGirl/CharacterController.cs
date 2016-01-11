@@ -33,7 +33,7 @@ public class CharacterController : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 
 		zoom = false;
-		sprint = true;
+		sprint = false;
 		dontRunUpdate = false;
 
 	}
@@ -44,25 +44,59 @@ public class CharacterController : MonoBehaviour {
 			if (dontRunUpdate == false) {
 				float forward = Input.GetAxis ("Vertical");
 				float strafe = Input.GetAxis ("Horizontal");
+				//Debug.Log ("forward : " + forward + "  strafe : " + strafe);
 
+				float run = forward * (Input.GetKey (KeyCode.LeftShift) ? speedFast : speedNormal);
+				animator.SetFloat ("Speed", forward);
+				animator.SetFloat ("Strafe", strafe);
+				animator.SetFloat ("Run", run);
+				/*
 				if (forward == 0.0f) {
-					animator.SetBool ("Aiming", false);
+					//animator.SetBool ("Aiming", false);
 					animator.SetFloat ("Speed", 0f);
 				}
 
-				if (forward != 0.0f) {
-					animator.SetBool ("Aiming", false);
-					animator.SetFloat ("Speed", 0.5f);
+				sprint = false;
+
+				if (forward > 0.0f) {
+					if (Input.GetKey (KeyCode.LeftShift)) {
+						animator.SetFloat ("Speed", 1f);
+						sprint = true;
+					}else{
+						animator.SetFloat ("Speed", 0.5f);
+					}
+					//animator.SetBool ("Aiming", false);
+					//animator.SetFloat ("Speed", 0.5f);
 				}
 
-
-				if (forward != 0.0f & Input.GetKey (KeyCode.LeftShift)) {
-					animator.SetBool ("Aiming", false);
-					animator.SetFloat ("Speed", 1f);
-					sprint = true;
-				} else {
-					sprint = false;
+				if (forward < 0.0f) {
+					if (Input.GetKey (KeyCode.LeftShift)) {
+						animator.SetFloat ("Speed", -1f);
+						sprint = true;
+					}else{
+						animator.SetFloat ("Speed", -0.5f);
+					}
+					//animator.SetBool ("Aiming", false);
+					//animator.SetFloat ("Speed", -0.5f);
 				}
+
+				if (strafe ==0.0f){
+					animator.SetFloat ("Strafe", 0.0f);
+				}
+				if (strafe > 0.0f){
+					animator.SetFloat ("Strafe", 0.5f);
+				}
+				if (strafe < 0.0f){
+					animator.SetFloat ("Strafe", -0.5f);
+				}
+				*/
+				//if ((forward != 0.0f) && (Input.GetKey (KeyCode.LeftShift))) {
+					//animator.SetBool ("Aiming", false);
+				//	animator.SetFloat ("Speed", 1f);
+				//	sprint = true;
+				//} else {
+				//	sprint = false;
+				//}
 
 				//zoom
 				if (Input.GetKey (KeyCode.Mouse1)) {
@@ -71,12 +105,12 @@ public class CharacterController : MonoBehaviour {
 					zoom = false;
 				}
 
-				if (Input.GetKey (KeyCode.Space)) {
+				//if (Input.GetKey (KeyCode.Space)) {
 					//animator.SetBool ("Squat", false);
 					//animator.SetFloat ("Speed", 0f);
 					//animator.SetBool("Aiming", false);
-					animator.SetTrigger ("Jump");
-				}
+				//	animator.SetTrigger ("Jump");
+				//}
 
 				//camera rotation
 				//if (Input.GetMouseButton(1)) 
@@ -122,9 +156,9 @@ public class CharacterController : MonoBehaviour {
 		return sprint ;
 	}
 
-	public void SetDontRunUptade(bool value){
+	public void SetDontRunUpdate(bool value){
 		dontRunUpdate = value;
-		animator.SetBool ("Aiming", false);
+		//animator.SetBool ("Aiming", false);
 		animator.SetFloat ("Speed", 0f);
 	}
 }

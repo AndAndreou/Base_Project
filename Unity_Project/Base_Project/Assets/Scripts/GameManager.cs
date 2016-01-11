@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour {
 	//set yes if scene use maxmap or minimap
 	public bool useMaxMap;
 
+
+	public AudioClip backgroundAudio;
+
 	private bool isPause;
 
 	// Use this for initialization
@@ -27,6 +30,10 @@ public class GameManager : MonoBehaviour {
 		pauseGUI = GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<PauseGUI>();
 		//maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
 		cameraController = GameObject.FindWithTag (GameRepository.GetMainCameraTag()).GetComponent<CameraController>();
+
+		GetComponent<AudioSource> ().clip = backgroundAudio;
+		AudioListener.volume = GameRepository.GetVolumeLevel() / 10.0F;
+		PlayBackgroundSfx ();
 
 		Time.timeScale = 1;
 		Cursor.visible = false; 
@@ -122,6 +129,11 @@ public class GameManager : MonoBehaviour {
 	{
 		return isPause;
 	}
-	
 
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	private void PlayBackgroundSfx()
+	{
+		GetComponent<AudioSource> ().Play ();
+	}
 }

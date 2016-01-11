@@ -7,7 +7,8 @@ public class DBInfo : MonoBehaviour {
 	//static names
 	private string username = null;
 	private string pass = null;
-	private int id = 2;
+	private int id = -1;
+	private int gameRounId ;
 	
 	//private int currentLevel=1;
 	
@@ -64,6 +65,19 @@ public class DBInfo : MonoBehaviour {
 	
 	public static string SetID(int id) {
 		instance.id = id;
+		return "";
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public static int GetGameRoundId() {
+		return instance.gameRounId;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public static string SetGameRoundId(int gameRoundId) {
+		instance.gameRounId = gameRoundId;
 		return "";
 	}
 	

@@ -36,7 +36,7 @@ public class PauseGUI : MonoBehaviour {
 
 	public Texture backgroundTexture;
 
-	public float volumeLevel = 10.0F; //prepi na gini ena geniko volume gia ola
+	public float volumeLevel ; //prepi na gini ena geniko volume gia ola
 
 	public AudioClip buttonClickAudio;
 
@@ -52,6 +52,7 @@ public class PauseGUI : MonoBehaviour {
 
 		//guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
+		volumeLevel = GameRepository.GetVolumeLevel ();
 	}
 
 	void Update(){
@@ -255,6 +256,7 @@ public class PauseGUI : MonoBehaviour {
 
 					GUI.Box(new Rect(0,sizeBox.y * 3,sizeBox.x,sizeBox.y), "Vol: " + Mathf.Round(volumeLevel));
 					AudioListener.volume = volumeLevel / 10.0F;
+					GameRepository.SetVolumeLevel(volumeLevel);
 					volumeLevel = GUI.HorizontalSlider(new Rect(sizeBox.x,sizeBox.y * 3,sizeButton.x * 4,sizeButton.y), volumeLevel, 0.0F, 10.0F);
 
 					GUI.Box(new Rect(0,sizeBox.y * 4,sizeButton.x * 4 + sizeBox.x,sizeBox.y * 4),

@@ -46,9 +46,10 @@ public class Do_Question : MonoBehaviour {
 	public float nextButtonfontSize = 0.01f ;
 
 
-	private int selGridInt = 0;
+	private int selGridInt = -1;
 	//num of question for wait answer
 	private int currentQuestion;
+	private int noUpdateQuestionCount;
 
 	//list of questions and answer
 	private List<Q_AStruct> q_a;
@@ -95,6 +96,7 @@ public class Do_Question : MonoBehaviour {
 	
 		currentQuestion = 0;
 		lastUpdateQuestion = 0;
+		noUpdateQuestionCount = 0;
 
 		init = true;
 
@@ -132,13 +134,13 @@ public class Do_Question : MonoBehaviour {
 				lastTimeqAndaGUIShow =qAndaGUIShow;
 				if(qAndaGUIShow == true){
 					Cursor.visible = true;
-					characterController.SetDontRunUptade(true);
-					cameraController.SetDontRunUptade(true);
+					characterController.SetDontRunUpdate(true);
+					cameraController.SetDontRunUpdate(true);
 				}
 				else{
 					Cursor.visible = false; 
-					characterController.SetDontRunUptade(false);
-					cameraController.SetDontRunUptade(false);
+					characterController.SetDontRunUpdate(false);
+					cameraController.SetDontRunUpdate(false);
 				}
 			}
 
@@ -167,11 +169,18 @@ public class Do_Question : MonoBehaviour {
 						if(haveChange == true){
 							Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++");
 							List<TwoInt> updateAnswerUser = new List<TwoInt>();
-							for(int i=0; i < currentQuestion ; i++){
-								updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
+							//for(int i=0; i < currentQuestion ; i++){
+							for(int i=0; i < noUpdateQuestionCount ; i++){
+								if (i> q_a.Count-1){
+									break;
+								}
+								//updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
+								updateAnswerUser.Add(new TwoInt(q_a[(i+lastUpdateQuestion)%(q_a.Count)].question.qno,userAnswers[(i+lastUpdateQuestion)%(q_a.Count)]));
 							}
 							lastUpdateQuestion = currentQuestion;
+							noUpdateQuestionCount = 0 ;
 							haveChange = false;
+
 							dbManager.AddUserAnswers(updateAnswerUser);
 						}
 					}
@@ -186,7 +195,7 @@ public class Do_Question : MonoBehaviour {
 	void OnGUI(){
 		if (gameManager.GetIsPause () == false) {
 
-			if (!init || !flagDistance){
+			if (/*!init ||*/ !flagDistance){
 				return;
 			}
 
@@ -206,8 +215,9 @@ public class Do_Question : MonoBehaviour {
 					DrawExtraText();
 				}
 				else{
-					if (sectionNo >= 0)
+					if (sectionNo >= 0){
 						DrawQandAGUI();
+					}
 				}
 			}
 		}
@@ -235,7 +245,7 @@ public class Do_Question : MonoBehaviour {
 
 		string question = q_a [currentQuestion].question.question;
 		string buttonText;
-		if(currentQuestion == q_a.Count){
+		if(currentQuestion == q_a.Count - 1){
 			buttonText = "Finish";
 		}
 		else{
@@ -250,13 +260,16 @@ public class Do_Question : MonoBehaviour {
 		GUILayout.EndVertical();
 
 		GUI.skin = qAndaNextButtonSkin;
-		qAndaNextButtonSkin.button.fontSize  = Mathf.RoundToInt (Screen.width * nextButtonfontSize);
+		//qAndaNextButtonSkin.button.fontSize  = Mathf.RoundToInt (Screen.width * nextButtonfontSize);
 
-		if (GUILayout.Button (buttonText)) {
+		//if (GUILayout.Button (buttonText)) {
+		if ((Input.GetMouseButtonUp(0)) && (selGridInt>=0)){
 		//set user answers
 			if(q_a[currentQuestion].answer.Count != 0 )
 				userAnswers[currentQuestion] = q_a[currentQuestion].answer[selGridInt].ano;
+			//Debug.Log(selGridInt + "  " + q_a[currentQuestion].answer[selGridInt].ano);
 			currentQuestion ++;
+			noUpdateQuestionCount ++;
 			haveChange = true;
 			if(currentQuestion > q_a.Count-1){
 				currentQuestion = 0;
@@ -264,6 +277,7 @@ public class Do_Question : MonoBehaviour {
 				qAndaGUIShow = false;
 				}
 				
+			selGridInt=-1;
 		}
 
 	}
