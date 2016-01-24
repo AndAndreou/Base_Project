@@ -29,7 +29,7 @@ public class Tutorial : MonoBehaviour {
 	public KeyCode prevTutorial;
 
 	private int count;
-	private bool finishTutorial;
+	//private bool finishTutorial;
 
 	private bool temp;
 	// Use this for initialization
@@ -43,26 +43,26 @@ public class Tutorial : MonoBehaviour {
 
 
 		temp = false;
-		finishTutorial = false;
+		//finishTutorial = false;
 		count = 0 ;
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		if (temp == false) {
-			temp = true;
-			gameManager.Pause ();
-			characterController.SetDontRunUpdate(true);
-			cameraController.SetDontRunUpdate(true);
-		}
 	
-		if (finishTutorial == false) {
+		if (GameRepository.GetFinishTutorial() == false) {
+			if (temp == false) {
+				temp = true;
+				gameManager.Pause ();
+				characterController.SetDontRunUpdate(true);
+				cameraController.SetDontRunUpdate(true);
+			}
+
 			if (Input.GetKeyDown (nextTutorial)) {
 				count ++;
 				if (count >= textures.Length) {
-					finishTutorial = true;
+					GameRepository.SetFinishTutorial(true);
 					gameManager.UnPause ();
 					characterController.SetDontRunUpdate(false);
 					cameraController.SetDontRunUpdate(false);
@@ -81,7 +81,7 @@ public class Tutorial : MonoBehaviour {
 
 	void OnGUI (){
 	
-		if (finishTutorial == false) {
+		if (GameRepository.GetFinishTutorial() == false) {
 			if (count < textures.Length) { 
 
 				DrawBackground();

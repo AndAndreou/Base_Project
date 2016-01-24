@@ -17,6 +17,8 @@ public class GameRepository : MonoBehaviour {
 
 	public float volumeLevel = 10.0f; 
 
+	public bool finishTutorial = false;
+
 
 	//private int currentLevel=1;
 	
@@ -110,5 +112,18 @@ public class GameRepository : MonoBehaviour {
 	public static float SetVolumeLevel(float vl){
 		instance.volumeLevel = vl;
 		return instance.volumeLevel;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static bool GetFinishTutorial(){
+		return instance.finishTutorial;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static bool SetFinishTutorial(bool value){
+		instance.finishTutorial = value;
+		return instance.finishTutorial;
 	}
 }
