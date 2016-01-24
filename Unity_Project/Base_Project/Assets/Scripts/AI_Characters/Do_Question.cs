@@ -32,7 +32,8 @@ public class Do_Question : MonoBehaviour {
 	public string interactText = "Press F To Talk";
 	public GUIStyle InteractTextStyle;
 
-	public string extraText="";
+	public string extraText = "" ;
+	public string sectionSerialNumberText = "" ;
 
 	//section no for take questions from db
 	public int sectionNo;
@@ -44,6 +45,11 @@ public class Do_Question : MonoBehaviour {
 
 	public GUISkin qAndaNextButtonSkin;
 	public float nextButtonfontSize = 0.01f ;
+	
+	public GUISkin successRateSkin;
+	public float successRatefontSize = 0.01f;
+	public Vector2 successRateLabelSise  ;
+	public Vector2 successRateButtonSise ;
 
 
 	private int selGridInt = -1;
@@ -63,6 +69,15 @@ public class Do_Question : MonoBehaviour {
 	private bool haveChange;
 	private int lastUpdateQuestion;
 
+
+	private bool checkForResult; //bool for call function to search success rate
+	private bool showSuccessRate; // bool for show the success rate
+	private float successRate;
+	private bool showPlayerGameRoundRank;
+	private int[] playerGameRoundRank;
+
+	private int sectionSerialNumber;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -77,6 +92,9 @@ public class Do_Question : MonoBehaviour {
 		characterController = targetGameObject.GetComponent<CharacterController>();
 		cameraController = GameObject.FindWithTag (GameRepository.GetMainCameraTag()).GetComponent<CameraController>();
 
+		//add new lines in string
+		extraText = extraText.Replace("@", System.Environment.NewLine);
+
 		//Init Interact text Rect
 		Vector2 textSize = InteractTextStyle.CalcSize(new GUIContent(interactText));
 		interactTextRect = new Rect(Screen.width / 2 - textSize.x / 2, Screen.height - (textSize.y + 5), textSize.x, textSize.y);
@@ -86,6 +104,8 @@ public class Do_Question : MonoBehaviour {
 			userAnswers = new int[q_a.Count];
 		}
 
+		//get the serial number from db
+		sectionSerialNumber = dbManager.GetSectionSerialNumber (sectionNo);
 
 		lastTimeqAndaGUIShow = false;
 		qAndaGUIShow = false;
@@ -93,9 +113,26 @@ public class Do_Question : MonoBehaviour {
 		showExtraMsg = true;
 
 		haveChange = false;
+
+		checkForResult = false;
+		showSuccessRate = false;
+		successRate = -3.0f;
+
+		showPlayerGameRoundRank = false;
+		playerGameRoundRank = new int[2];
+		playerGameRoundRank [0] = -1;
+		playerGameRoundRank [1] = -1;
 	
 		currentQuestion = 0;
-		lastUpdateQuestion = 0;
+
+		for (int i=0; i <= q_a.Count-1;i++){
+			if(q_a [i].question.qno == DBInfo.GetCurrentQuestion()){
+				currentQuestion = i;
+				break;
+			}
+		}
+
+		lastUpdateQuestion = currentQuestion;
 		noUpdateQuestionCount = 0;
 
 		init = true;
@@ -126,8 +163,17 @@ public class Do_Question : MonoBehaviour {
 				if(Input.GetKeyDown(KeyCode.Escape)){
 					flagPressButton = false;
 					SetQandAGUIShow(false);
+					showSuccessRate = false ;
 				}
 			}
+
+			if(showSuccessRate == true){
+				if(Input.GetKeyDown(KeyCode.Escape)){
+					showSuccessRate = false ;
+					Cursor.visible = false;
+				}
+			}
+
 
 			//run if change show or not the qAnda GUI
 			if(lastTimeqAndaGUIShow != qAndaGUIShow){
@@ -166,26 +212,35 @@ public class Do_Question : MonoBehaviour {
 			if (DBInfo.GetID() != -1){
 				if (sectionNo>=0){
 					if (Mathf.Abs (Vector3.Distance (targetTransform.position, this.transform.position)) >= distanceForUpdate) {
-						if(haveChange == true){
-							Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++");
-							List<TwoInt> updateAnswerUser = new List<TwoInt>();
-							//for(int i=0; i < currentQuestion ; i++){
-							for(int i=0; i < noUpdateQuestionCount ; i++){
-								if (i> q_a.Count-1){
-									break;
-								}
-								//updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
-								updateAnswerUser.Add(new TwoInt(q_a[(i+lastUpdateQuestion)%(q_a.Count)].question.qno,userAnswers[(i+lastUpdateQuestion)%(q_a.Count)]));
-							}
-							lastUpdateQuestion = currentQuestion;
-							noUpdateQuestionCount = 0 ;
-							haveChange = false;
-
-							dbManager.AddUserAnswers(updateAnswerUser);
-						}
+						UpdateDB();
 					}
 				}
 			}
+
+			//find the successrate for this round
+			if (checkForResult == true){
+				checkForResult = false;
+				showSuccessRate = true;
+				Cursor.visible = true;
+				characterController.SetDontRunUpdate(true);
+				cameraController.SetDontRunUpdate(true);
+				UpdateDB();
+				successRate = GetSuccessRateForSection();
+
+				if(sectionSerialNumber != DBInfo.GetLastSectionSerialNumber()){
+					DBInfo.SetCurrentSection(sectionSerialNumber +1);
+					DBInfo.SetCurrentQuestion(dbManager.GetFirstQuestionIdFromNextSection(sectionSerialNumber));
+				}
+				else{
+					playerGameRoundRank = dbManager.GetPlayerRank(DBInfo.GetID(),DBInfo.GetGameRoundId());
+					showPlayerGameRoundRank = true;
+					//playerGameRoundRank = dbManager.GetPlayerRank(DBInfo.GetID(),DBInfo.GetGameRoundId());
+					DBInfo.SetCurrentSection(0);
+					DBInfo.SetCurrentQuestion(1);
+				}
+			}
+
+
 		}
 	}
 
@@ -194,6 +249,94 @@ public class Do_Question : MonoBehaviour {
 
 	void OnGUI(){
 		if (gameManager.GetIsPause () == false) {
+
+			if (showSuccessRate == true){
+
+				GUI.skin = successRateSkin;
+
+				successRateSkin.label.fontSize = Mathf.RoundToInt (Screen.width * successRatefontSize);
+
+
+				string msg;
+				if (successRate == -3.0f){
+					msg = "wait";
+				}
+				else{
+					msg = "Success Rate is : " + successRate;
+				}
+
+				Vector2 sizeLabel;
+				sizeLabel.x = Screen.width * successRateLabelSise.x;
+				sizeLabel.y = Screen.height * successRateLabelSise.y;
+
+				Vector2 positionLabel;
+				positionLabel.x = Screen.width / 2 - sizeLabel.x / 2;
+				positionLabel.y = Screen.height / 2 - sizeLabel.y / 2;
+
+				GUI.Label(new Rect(positionLabel.x, positionLabel.y, sizeLabel.x, sizeLabel.y),msg);
+
+				Vector2 sizeButton;
+				sizeButton.x = Screen.width * successRateButtonSise.x;
+				sizeButton.y = Screen.height * successRateButtonSise.y;
+				
+				Vector2 positionButton;
+				positionButton.x = Screen.width / 2 + sizeLabel.x / 2 - sizeButton.x ;
+				positionButton.y = Screen.height / 2 + sizeLabel.y / 2;
+
+				if(GUI.Button(new Rect(positionButton.x, positionButton.y, sizeButton.x, sizeButton.y),"Ok")){
+					showSuccessRate = false ;
+					Cursor.visible = false;
+					characterController.SetDontRunUpdate(false);
+					cameraController.SetDontRunUpdate(false);
+				}
+
+				return;
+			}
+
+			//show game round rank
+			if (showPlayerGameRoundRank == true){
+				
+				GUI.skin = successRateSkin;
+				
+				successRateSkin.label.fontSize = Mathf.RoundToInt (Screen.width * successRatefontSize);
+				
+				
+				string msg;
+				if (playerGameRoundRank[0] == -1){
+					msg = "wait";
+				}
+				else{
+					msg = "Your position in : " + playerGameRoundRank[0] + " and your total rate is : " + playerGameRoundRank[1] + "/100" ;
+				}
+				
+				Vector2 sizeLabel;
+				sizeLabel.x = Screen.width * successRateLabelSise.x;
+				sizeLabel.y = Screen.height * successRateLabelSise.y;
+				
+				Vector2 positionLabel;
+				positionLabel.x = Screen.width / 2 - sizeLabel.x / 2;
+				positionLabel.y = Screen.height / 2 - sizeLabel.y / 2;
+				
+				GUI.Label(new Rect(positionLabel.x, positionLabel.y, sizeLabel.x, sizeLabel.y),msg);
+				
+				Vector2 sizeButton;
+				sizeButton.x = Screen.width * successRateButtonSise.x;
+				sizeButton.y = Screen.height * successRateButtonSise.y;
+				
+				Vector2 positionButton;
+				positionButton.x = Screen.width / 2 + sizeLabel.x / 2 - sizeButton.x ;
+				positionButton.y = Screen.height / 2 + sizeLabel.y / 2;
+				
+				if(GUI.Button(new Rect(positionButton.x, positionButton.y, sizeButton.x, sizeButton.y),"Ok")){
+					showPlayerGameRoundRank = false ;
+					Cursor.visible = false;
+					characterController.SetDontRunUpdate(false);
+					cameraController.SetDontRunUpdate(false);
+				}
+				
+				return;
+			}
+
 
 			if (/*!init ||*/ !flagDistance){
 				return;
@@ -205,6 +348,21 @@ public class Do_Question : MonoBehaviour {
 				Vector2 textSize = InteractTextStyle.CalcSize (new GUIContent (interactText));
 				interactTextRect = new Rect (Screen.width / 2 - textSize.x / 2, Screen.height - (textSize.y + 5), textSize.x, textSize.y);
 				GUI.Label (interactTextRect, interactText, InteractTextStyle);
+			}
+
+			//if this seqtion != current section
+			if ((flagPressButton) && (sectionNo>=0)){
+				if(DBInfo.GetCurrentSection() != sectionSerialNumber){
+					GUI.skin = successRateSkin;
+					DrawSectionSerialNumberText();
+					if (GUILayout.Button ("OK")) {
+						flagPressButton = false;
+						SetQandAGUIShow(false);
+						showSuccessRate = false ;
+						//Cursor.visible = false; 
+					}
+					return;
+				}
 			}
 
 
@@ -244,13 +402,13 @@ public class Do_Question : MonoBehaviour {
 		}
 
 		string question = q_a [currentQuestion].question.question;
-		string buttonText;
-		if(currentQuestion == q_a.Count - 1){
-			buttonText = "Finish";
-		}
-		else{
-			buttonText = "Next";
-		}
+		//string buttonText;
+		//if(currentQuestion == q_a.Count - 1){
+		//	buttonText = "Finish";
+		//}
+		//else{
+		//	buttonText = "Next";
+		//}
 
 
 		//GUILayout.BeginArea(new Rect(0,0,qAndaSkin.label.fixedWidth,qAndaSkin.label.fixedHeight));
@@ -275,6 +433,7 @@ public class Do_Question : MonoBehaviour {
 				currentQuestion = 0;
 				flagPressButton = false;
 				qAndaGUIShow = false;
+				checkForResult =true;
 				}
 				
 			selGridInt=-1;
@@ -284,9 +443,46 @@ public class Do_Question : MonoBehaviour {
 
 /*---------------------------------------------------------------------------------------------------------------*/
 
-	public void DrawExtraText(){
+	private void DrawExtraText(){
 		GUI.skin = qAndaNextButtonSkin;
 		qAndaNextButtonSkin.label.fontSize = Mathf.RoundToInt (Screen.width * questionfontSize);
 		GUILayout.Label (extraText);
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+	
+	private void DrawSectionSerialNumberText(){
+		GUI.skin = qAndaNextButtonSkin;
+		qAndaNextButtonSkin.label.fontSize = Mathf.RoundToInt (Screen.width * questionfontSize);
+		GUILayout.Label (sectionSerialNumberText);
+	}
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	private float GetSuccessRateForSection(){
+		return (dbManager.GetSuccessRateForSection(DBInfo.GetGameRoundId(),sectionNo));
+
+	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	private void UpdateDB(){
+		if(haveChange == true){
+			//Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++");
+			List<TwoInt> updateAnswerUser = new List<TwoInt>();
+			//for(int i=0; i < currentQuestion ; i++){
+			for(int i=0; i < noUpdateQuestionCount ; i++){
+				if (i> q_a.Count-1){
+					break;
+				}
+				//updateAnswerUser.Add(new TwoInt(q_a[i].question.qno,userAnswers[i]));
+				updateAnswerUser.Add(new TwoInt(q_a[(i+lastUpdateQuestion)%(q_a.Count)].question.qno,userAnswers[(i+lastUpdateQuestion)%(q_a.Count)]));
+			}
+			lastUpdateQuestion = currentQuestion;
+			noUpdateQuestionCount = 0 ;
+			haveChange = false;
+			
+			dbManager.AddUserAnswers(updateAnswerUser);
+		}
+	}
+
 }

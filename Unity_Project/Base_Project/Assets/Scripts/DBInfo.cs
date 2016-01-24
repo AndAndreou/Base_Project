@@ -9,6 +9,9 @@ public class DBInfo : MonoBehaviour {
 	private string pass = null;
 	private int id = -1;
 	private int gameRounId ;
+	private int currentSection ;
+	private int currentQuestion ;
+	private int lastSection;
 	
 	//private int currentLevel=1;
 	
@@ -82,5 +85,40 @@ public class DBInfo : MonoBehaviour {
 	}
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
+	public static int GetCurrentSection() {
+		return instance.currentSection;
+	}
 	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static string SetCurrentSection( int currentSection) {
+		instance.currentSection = currentSection;
+		return "";
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static int GetLastSectionSerialNumber() {
+		return instance.lastSection;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static string SetLastSectionSerialNumber( int lastSection) {
+		instance.lastSection = lastSection;
+		return "";
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static int GetCurrentQuestion() {
+		return instance.currentQuestion;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static string SetCurrentQuestion( int currentQuestion) {
+		instance.currentQuestion = currentQuestion;
+		return "";
+	}
 }

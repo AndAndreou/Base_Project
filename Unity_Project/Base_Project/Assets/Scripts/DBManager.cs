@@ -143,7 +143,7 @@ public class DBManager : MonoBehaviour {
 	//public IEnumerator Insert(string query)
 	{
 		//string query = "INSERT INTO tableinfo (name, age) VALUES('John Smith', '33')";
-		Debug.Log ("test");
+		//Debug.Log ("test");
 		//open connection
 		if (this.OpenConnection() == true)
 		{
@@ -210,9 +210,9 @@ public class DBManager : MonoBehaviour {
 	/*---------------------------------------------------------------------------------------------------------------*/
 
 	//Count statement
-	public int Count()
+	public int Count(string tb)
 	{
-		string query = "SELECT Count(*) FROM tableinfo";
+		string query = "SELECT Count(*) FROM " + tb ;
 		int Count = -1;
 		
 		//Open Connection
@@ -223,7 +223,9 @@ public class DBManager : MonoBehaviour {
 			
 			//ExecuteScalar will return one value
 			Count = int.Parse(cmd.ExecuteScalar()+"");
-			
+
+			//Debug.Log(Count);
+
 			//close Connection
 			this.CloseConnection();
 			
@@ -236,39 +238,6 @@ public class DBManager : MonoBehaviour {
 	}
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
-		
-	public int FindGameRound(int playerID){
-
-		string cmdText = "SELECT MAX(gr.game_round_id) FROM game_round gr WHERE gr.users_user_id = '" + playerID + "'";
-		int gameRound = -1;
-
-		//Open Connection
-		if (this.OpenConnection () == true) {
-			string returnMsg;
-			MySqlDataReader reader = null;
-
-
-			//Create Mysql Command
-			MySqlCommand cmd = new MySqlCommand (cmdText, con);
-			
-			//execure the reader
-			reader = cmd.ExecuteReader (); 
-
-
-			if (reader.Read ()) {
-				gameRound = int.Parse (reader.GetString (0));
-			}
-
-			return gameRound;
-		} 
-		else {
-			return -1;
-		}
-
-	}
-
-	/*---------------------------------------------------------------------------------------------------------------*/
-
 
 	public string CheckLogin(string username, string pass){
 
@@ -299,9 +268,29 @@ public class DBManager : MonoBehaviour {
 				DBInfo.SetPassword(playerPassword);
 				DBInfo.SetID(playerUserID);
 
+				reader.Close();
 				this.CloseConnection();
 
-				SetGameRound(playerUserID);
+				//SetGameRound(playerUserID);
+				int gameRound = FindGameRound(playerUserID);
+				Debug.Log("gameRound : " + gameRound);
+
+				if ( gameRound >=0){
+					DBInfo.SetGameRoundId(gameRound);
+				}
+				else{
+					SetGameRound(playerUserID);
+				}
+
+
+				FindCurrentSection(gameRound);
+
+				//
+				//Debug.Log(Count("section"));
+				DBInfo.SetLastSectionSerialNumber(GetLastSectionSerialNumber());
+
+				//Debug.Log(DBInfo.GetGameRoundId());
+				Debug.Log("last sections : " + DBInfo.GetLastSectionSerialNumber());
 
 			}
 			else
@@ -319,6 +308,186 @@ public class DBManager : MonoBehaviour {
 			return ("DataBase can not connect");
 		}
 	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public int FindCurrentSection (int gameRound){
+
+		int currentSection = -1;
+		int lastQuestion = -1;
+		int nextQuestion = -1;
+
+		//current section
+		string cmdText = "SELECT MAX(s.serial_number) as temp FROM game_round_answers ga " +
+			"INNER JOIN questions q ON q.question_ID = ga.questions_question_id " +
+			"INNER JOIN section s ON s.section_id = q.section_section_id " +
+				"WHERE game_round_game_round_id = '" + gameRound + "' " ; //+
+			//"GROUP BY q.section_section_id";
+			
+
+		//Open Connection
+		if (this.OpenConnection () == true) {
+			string returnMsg;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader (); 
+
+
+			if (reader.Read ()) {
+				if (!reader.IsDBNull (reader.GetOrdinal ("temp"))) {
+					currentSection = int.Parse (reader.GetString (0));
+				} else {
+					currentSection=-1;
+				}
+			}
+
+		} 
+		else {
+			currentSection = -2;
+		}
+
+		this.CloseConnection();
+
+		Debug.Log ("currentSection : " + currentSection);
+
+
+		if (currentSection >= 0) {
+
+			DBInfo.SetCurrentSection (currentSection);
+			//last question
+			cmdText = "SELECT MAX(q.question_id) as temp FROM game_round_answers ga " +
+				"INNER JOIN questions q ON q.question_ID = ga.questions_question_id " +
+				"INNER JOIN section s ON s.section_id = q.section_section_id " +
+				"WHERE game_round_game_round_id = '" + gameRound + "' AND serial_number = '" + currentSection + "' ";
+
+			//Open Connection
+			if (this.OpenConnection () == true) {
+				string returnMsg;
+				MySqlDataReader reader = null;
+			
+			
+				//Create Mysql Command
+				MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+				//execure the reader
+				reader = cmd.ExecuteReader (); 
+
+				if (reader.Read ()) {
+					if (!reader.IsDBNull (reader.GetOrdinal ("temp"))) {
+						lastQuestion = int.Parse (reader.GetString (0));
+					} else {
+						lastQuestion = -1;
+					}
+				}
+
+			} else {
+				lastQuestion = -2;
+			}
+	
+			this.CloseConnection ();
+
+			Debug.Log ("lastQuestion : " + lastQuestion);
+
+			//next question
+			cmdText = "SELECT MIN(q.question_id) as temp FROM questions q " +
+				"INNER JOIN section s ON s.section_id = q.section_section_id " +
+					"WHERE serial_number = '" + currentSection + "' AND question_id > '" + lastQuestion + "' ";
+		
+			//Open Connection
+			if (this.OpenConnection () == true) {
+				string returnMsg;
+				MySqlDataReader reader = null;
+			
+			
+				//Create Mysql Command
+				MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+				//execure the reader
+				reader = cmd.ExecuteReader (); 
+
+				if (reader.Read ()) {
+					if (!reader.IsDBNull (reader.GetOrdinal ("temp"))) {
+						nextQuestion = int.Parse (reader.GetString (0));
+					} else {
+						nextQuestion = -1;
+					}
+				}
+
+			} else {
+				nextQuestion = -2;
+			}
+
+			this.CloseConnection ();
+
+			Debug.Log ("nextQuestion : " + nextQuestion);
+
+			if(nextQuestion == -1){
+				DBInfo.SetCurrentSection(DBInfo.GetCurrentSection()+1); //kanonika prepi na vrisko  pio ine to epomeno section
+				//DBInfo.SetCurrentQuestion(-1); //kanonika prepi na vrisko pia ine i proti erotisi tou section
+				DBInfo.SetCurrentQuestion(GetFirstQuestionIdFromNextSection(DBInfo.GetCurrentSection()));
+			}
+			else{
+				DBInfo.SetCurrentQuestion(nextQuestion);
+			}
+
+		} 
+		else {
+			if(currentSection == -1){
+				DBInfo.SetCurrentSection(0); //kanonika prepi na vrisko  pio ine to proto section
+				DBInfo.SetCurrentQuestion(1); //kanonika prepi na vrisko pia ine i proti erotisi tou section
+			}
+		}
+
+		Debug.Log ("last - currentSection : " + DBInfo.GetCurrentSection());
+		Debug.Log ("last - currentquestion : " + DBInfo.GetCurrentQuestion());
+
+		return 0;
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public int FindGameRound(int playerID){
+		
+		string cmdText = "SELECT MAX(gr.game_round_id) as temp FROM game_round gr WHERE gr.users_user_id = '" + playerID + "'";
+		int gameRound = -1;
+		
+		//Open Connection
+		if (this.OpenConnection () == true) {
+			string returnMsg;
+			MySqlDataReader reader = null;
+
+			Debug.Log("test1");
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand (cmdText, con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader (); 
+
+			if (reader.Read ()) {
+				if (!reader.IsDBNull (reader.GetOrdinal ("temp"))) {
+					gameRound = int.Parse (reader.GetString (0));
+				} else {
+					gameRound=-1;
+				}
+			}
+
+
+			this.CloseConnection();
+			return gameRound;
+		} 
+		else {
+			this.CloseConnection();
+			return -2;
+		}
+		
+	}
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
 
@@ -330,10 +499,10 @@ public class DBManager : MonoBehaviour {
 		{
 			Insert (query);
 			int gameRound = FindGameRound(playerUserID);
-			if (gameRound!= -1 ){
+			//if (gameRound  < 0 ){
 				DBInfo.SetGameRoundId(gameRound);
-				Debug.Log(DBInfo.GetGameRoundId());
-			}
+				//Debug.Log(DBInfo.GetGameRoundId());
+			//}
 		}
 		catch (MySqlException ex)
 		{
@@ -425,11 +594,11 @@ public class DBManager : MonoBehaviour {
 
 	public void AddUserAnswers(List<TwoInt> userAnswers){
 		for (int i=0; i<userAnswers.Count; i++) {
-			Debug.Log(DBInfo.GetID());
+			//Debug.Log(DBInfo.GetID());
 			string query = "INSERT INTO game_round_answers (game_round_game_round_id, questions_question_id, answers_answer_id) VALUES('" + DBInfo.GetGameRoundId() + "', '" + userAnswers[i].questionNo + "', '" + userAnswers[i].answerNo + "')";
 			try
 			{
-				Debug.Log(":::::::::::::::::::::::::::::::::::::");
+				//Debug.Log(":::::::::::::::::::::::::::::::::::::");
 				Insert(query);
 				//StartCoroutine (Insert(query));
 			}
@@ -445,4 +614,237 @@ public class DBManager : MonoBehaviour {
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
 
+
+	public float GetSuccessRateForSection (int gameRound, int sectionNo){
+
+		string cmdText = "SELECT round(sum(iscorrect)/count(*),2) " +
+			"FROM game_round_answers " +
+			"INNER JOIN questions ON questions.question_id = questions_question_id  " +
+			"INNER JOIN answers ON answers.answer_id = answers_answer_id  " +
+			"WHERE game_round_answers.game_round_game_round_id = '" + gameRound + "' AND questions.section_section_id = '" + sectionNo + "'";
+		
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			float successRate;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+
+			if (reader.Read())
+			{
+				successRate = float.Parse(reader.GetString(0));
+				
+			}
+			else
+			{
+				this.CloseConnection();
+				successRate = (-1f);
+			}
+
+			this.CloseConnection();
+			return successRate;
+
+		}
+		else
+		{
+			this.CloseConnection();
+			return (-2f);//("can not open connection");
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public int GetSectionSerialNumber (int sectionId){
+		
+		string cmdText = "SELECT serial_number " +
+				"FROM section " +
+				"WHERE section_id = '" + sectionId + "'";
+		
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			int sectionSerialNumber;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+			
+			if (reader.Read())
+			{
+				sectionSerialNumber = int.Parse(reader.GetString(0));
+				
+			}
+			else
+			{
+				//this.CloseConnection();
+				sectionSerialNumber = (-1);
+			}
+			
+			this.CloseConnection();
+			return sectionSerialNumber;
+			
+		}
+		else
+		{
+			this.CloseConnection();
+			return (-2);//("can not open connection");
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public int GetLastSectionSerialNumber (){
+		
+		string cmdText = "SELECT MAX(serial_number) " +
+			"FROM section ";
+		
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			int lastSectionSerialNumber;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+			
+			if (reader.Read())
+			{
+				lastSectionSerialNumber = int.Parse(reader.GetString(0));
+				
+			}
+			else
+			{
+				//this.CloseConnection();
+				lastSectionSerialNumber = (-1);
+			}
+			
+			this.CloseConnection();
+			return lastSectionSerialNumber;
+			
+		}
+		else
+		{
+			this.CloseConnection();
+			return (-2);//("can not open connection");
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public int GetFirstQuestionIdFromNextSection (int currentSectionSerialNumber){
+
+		string cmdText = "SELECT MIN(question_id) " +
+			"FROM questions " + 
+			"INNER JOIN section s ON s.section_id = section_section_id " +
+			"WHERE s.serial_number = '" + (currentSectionSerialNumber +1) + "'";
+		
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			int firstQuestionIdFromNextSection;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+			
+			if (reader.Read())
+			{
+				firstQuestionIdFromNextSection = int.Parse(reader.GetString(0));
+				
+			}
+			else
+			{
+				//this.CloseConnection();
+				firstQuestionIdFromNextSection = (-1);
+			}
+			
+			this.CloseConnection();
+			return firstQuestionIdFromNextSection;
+			
+		}
+		else
+		{
+			this.CloseConnection();
+			return (-2);//("can not open connection");
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public int[] GetPlayerRank(int playerId, int gameRoundId){
+		string cmdText = "SELECT user_id, game_round_game_round_id, round(sum(iscorrect)/count(*),2) as success_rate " +
+			"FROM game_round_answers " + 
+				"INNER JOIN (SELECT user_id, game_round_id, username FROM game_round INNER JOIN users ON users.user_id = users_user_id) as us ON us.game_round_id = game_round_game_round_id " +
+				"INNER JOIN answers ON answers.answer_id = answers_answer_id " +
+				"GROUP BY user_id, game_round_game_round_id " +
+				"ORDER BY success_rate DESC" ;
+
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			int[] playerRank = new int[2]; //0 - position, 1 - points 
+			playerRank[0] = -1;
+			playerRank[1] = -1;
+
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+
+			int i=1;
+			float prevPlayerRank = -1f;
+			while (reader.Read())
+			{
+
+				if ((int.Parse(reader.GetString(0)) == playerId) || (int.Parse(reader.GetString(1)) == gameRoundId)){
+					playerRank[0] = i;
+					playerRank[1] = Mathf.RoundToInt(float.Parse(reader.GetString(2)) * 100);
+				}
+
+				if (prevPlayerRank != float.Parse(reader.GetString(2))){
+					i++;
+				}
+				prevPlayerRank =float.Parse(reader.GetString(2));
+			}
+			/*else
+			{
+				//this.CloseConnection();
+				lastSectionSerialNumber = (-1);
+			}*/
+			
+			this.CloseConnection();
+			return playerRank;
+			
+		}
+		else
+		{
+			this.CloseConnection();
+			int[] temp = new int[2];
+			temp[0] = -2;
+			temp[1] = -2;
+			return (temp);//("can not open connection");
+		}
+	}
 }
