@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GUIManager : MonoBehaviour {
 
@@ -39,7 +40,8 @@ public class GUIManager : MonoBehaviour {
 	//skins
 	public GUISkin maxMapSkin;
 	public GUISkin teleportButtonSkin;
-
+	public GUISkin mainMenuSkin;
+	public GUISkin tasksSkin;
 
 	private Vector2 scrollPosition;
 
@@ -61,11 +63,15 @@ public class GUIManager : MonoBehaviour {
 	public Vector2 titleSize; // % of screen range 0-1
 	public Vector2 titleOffset;
 
-	public GUISkin mainMenuSkin;
+
 
 	private AsyncOperation async = null;
 
 	private bool loadLevel;
+
+	private bool showTasks;
+
+	public float tasksFontSize = 0.01f;
 
 	//private bool showPauseMenu;
 
@@ -85,7 +91,7 @@ public class GUIManager : MonoBehaviour {
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 
 		loadLevel = false;
-
+		showTasks = false;
 
 	}
 
@@ -117,6 +123,10 @@ public class GUIManager : MonoBehaviour {
 			{
 				if(useMiniMap){
 					DrawMinMap ();
+				}
+
+				if(showTasks){
+					DrawShowTasks();
 				}
 			}
 		}
@@ -240,6 +250,41 @@ public class GUIManager : MonoBehaviour {
 		return false ;
 	}
 
+/*---------------------------------------------------------------------------------------------------------------*/
+
+	private void DrawShowTasks(){
+		 
+		GUI.skin = tasksSkin;
+
+		tasksSkin.label.fontSize = Mathf.RoundToInt (Screen.width * tasksFontSize);
+
+		List<SectionInfoStruct> si = DBInfo.GetSectionsInfo ();
+
+		for (int i = 0; i < si.Count; i++) {
+
+			int sn = si[i].serialNumber;
+			int cn = DBInfo.GetCurrentSection();
+
+			if (sn < cn){
+				tasksSkin.label.normal.textColor = Color.green;
+				tasksSkin.label.hover.textColor = Color.green;
+				tasksSkin.label.fontStyle = FontStyle.Normal;
+			}
+			else if (sn > cn){
+				tasksSkin.label.normal.textColor = Color.red;
+				tasksSkin.label.hover.textColor = Color.red;
+				tasksSkin.label.fontStyle = FontStyle.Normal;
+			}
+			else{
+				tasksSkin.label.normal.textColor = Color.white;
+				tasksSkin.label.hover.textColor = Color.white;
+				tasksSkin.label.fontStyle = FontStyle.BoldAndItalic;
+			}
+
+			GUILayout.Label(si[i].serialNumber + ".  " + si[i].title);
+		}
+	}
+
 /*---------------------------------------------------------------------------------------------------------------*/	
 
 	public void SetMaxMapShow(bool value)
@@ -340,6 +385,15 @@ public class GUIManager : MonoBehaviour {
 		gameManager.Pause ();
 		StartCoroutine (LoadScene (name));
 	}
+
+
+/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public void SetShowTasks(bool value)
+	{
+		showTasks = value;
+	}
+
 
 /*---------------------------------------------------------------------------------------------------------------*/
 	

@@ -125,10 +125,13 @@ public class Do_Question : MonoBehaviour {
 	
 		currentQuestion = 0;
 
-		for (int i=0; i <= q_a.Count-1;i++){
-			if(q_a [i].question.qno == DBInfo.GetCurrentQuestion()){
-				currentQuestion = i;
-				break;
+		if (sectionNo >= 0) {
+			for (int i=0; i < q_a.Count; i++) {
+				//Debug.Log ("!!!!!!!!!");
+				if (q_a [i].question.qno == DBInfo.GetCurrentQuestion ()) {
+					currentQuestion = i;
+					break;
+				}
 			}
 		}
 
@@ -231,13 +234,19 @@ public class Do_Question : MonoBehaviour {
 					DBInfo.SetCurrentSection(sectionSerialNumber +1);
 					DBInfo.SetCurrentQuestion(dbManager.GetFirstQuestionIdFromNextSection(sectionSerialNumber));
 				}
+				//start new round and get round rank
 				else{
 					playerGameRoundRank = dbManager.GetPlayerRank(DBInfo.GetID(),DBInfo.GetGameRoundId());
 					showPlayerGameRoundRank = true;
 					//playerGameRoundRank = dbManager.GetPlayerRank(DBInfo.GetID(),DBInfo.GetGameRoundId());
 					DBInfo.SetCurrentSection(0);
 					DBInfo.SetCurrentQuestion(1);
+
+					//add new round
+					dbManager.SetGameRound(DBInfo.GetID());
+					DBInfo.SetGameRoundId(dbManager.FindGameRound(DBInfo.GetID()));
 				}
+
 			}
 
 
@@ -295,7 +304,9 @@ public class Do_Question : MonoBehaviour {
 
 			//show game round rank
 			if (showPlayerGameRoundRank == true){
-				
+
+				Cursor.visible = true;
+
 				GUI.skin = successRateSkin;
 				
 				successRateSkin.label.fontSize = Mathf.RoundToInt (Screen.width * successRatefontSize);
@@ -484,5 +495,7 @@ public class Do_Question : MonoBehaviour {
 			dbManager.AddUserAnswers(updateAnswerUser);
 		}
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
 
 }

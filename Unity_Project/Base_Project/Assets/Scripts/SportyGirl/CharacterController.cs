@@ -50,53 +50,7 @@ public class CharacterController : MonoBehaviour {
 				animator.SetFloat ("Speed", forward);
 				animator.SetFloat ("Strafe", strafe);
 				animator.SetFloat ("Run", run);
-				/*
-				if (forward == 0.0f) {
-					//animator.SetBool ("Aiming", false);
-					animator.SetFloat ("Speed", 0f);
-				}
-
-				sprint = false;
-
-				if (forward > 0.0f) {
-					if (Input.GetKey (KeyCode.LeftShift)) {
-						animator.SetFloat ("Speed", 1f);
-						sprint = true;
-					}else{
-						animator.SetFloat ("Speed", 0.5f);
-					}
-					//animator.SetBool ("Aiming", false);
-					//animator.SetFloat ("Speed", 0.5f);
-				}
-
-				if (forward < 0.0f) {
-					if (Input.GetKey (KeyCode.LeftShift)) {
-						animator.SetFloat ("Speed", -1f);
-						sprint = true;
-					}else{
-						animator.SetFloat ("Speed", -0.5f);
-					}
-					//animator.SetBool ("Aiming", false);
-					//animator.SetFloat ("Speed", -0.5f);
-				}
-
-				if (strafe ==0.0f){
-					animator.SetFloat ("Strafe", 0.0f);
-				}
-				if (strafe > 0.0f){
-					animator.SetFloat ("Strafe", 0.5f);
-				}
-				if (strafe < 0.0f){
-					animator.SetFloat ("Strafe", -0.5f);
-				}
-				*/
-				//if ((forward != 0.0f) && (Input.GetKey (KeyCode.LeftShift))) {
-					//animator.SetBool ("Aiming", false);
-				//	animator.SetFloat ("Speed", 1f);
-				//	sprint = true;
-				//} else {
-				//	sprint = false;
-				//}
+			
 
 				//zoom
 				if (Input.GetKey (KeyCode.Mouse1)) {
@@ -105,22 +59,11 @@ public class CharacterController : MonoBehaviour {
 					zoom = false;
 				}
 
-				//if (Input.GetKey (KeyCode.Space)) {
-					//animator.SetBool ("Squat", false);
-					//animator.SetFloat ("Speed", 0f);
-					//animator.SetBool("Aiming", false);
-				//	animator.SetTrigger ("Jump");
-				//}
 
-				//camera rotation
-				//if (Input.GetMouseButton(1)) 
-				//{
 				float rotX = transform.localEulerAngles.y + Input.GetAxis ("Mouse X") * mouseSensitivityX;
-				//rotY += Input.GetAxis("Mouse Y") * mouseSensitivityY;
-				//rotY = Mathf.Clamp(rotY, -89.5f, 89.5f);
-				//transform.localEulerAngles = new Vector3(-rotY, rotX, 0.0f);
+
 				transform.localEulerAngles = new Vector3 (0.0f, rotX, 0.0f);
-				//}
+
 		
 
 				// move forwards/backwards
@@ -160,5 +103,9 @@ public class CharacterController : MonoBehaviour {
 		dontRunUpdate = value;
 		//animator.SetBool ("Aiming", false);
 		animator.SetFloat ("Speed", 0f);
+	}
+
+	public bool GetDontRunUpdate(){
+		return dontRunUpdate;
 	}
 }

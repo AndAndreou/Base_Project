@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 	public KeyCode mapKey;
 	public KeyCode pauseKey;
 	public KeyCode changeCameraView;
+	public KeyCode showTasks;
 
 	//set yes if scene use maxmap or minimap
 	public bool useMaxMap;
@@ -101,6 +102,11 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
+		if (!isPause) {
+			guiManager.SetShowTasks( Input.GetKey(showTasks));
+		}
+
+
 	}
 
 /*---------------------------------------------------------------------------------------------------------------*/	
@@ -129,6 +135,10 @@ public class GameManager : MonoBehaviour {
 	{
 		return isPause;
 	}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+
 
 /*---------------------------------------------------------------------------------------------------------------*/
 

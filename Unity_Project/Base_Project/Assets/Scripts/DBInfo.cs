@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DBInfo : MonoBehaviour {
 	private static readonly DBInfo instance = new DBInfo();
@@ -12,6 +13,7 @@ public class DBInfo : MonoBehaviour {
 	private int currentSection ;
 	private int currentQuestion ;
 	private int lastSection;
+	private List<SectionInfoStruct> sectionsInfo;
 	
 	//private int currentLevel=1;
 	
@@ -119,6 +121,19 @@ public class DBInfo : MonoBehaviour {
 	
 	public static string SetCurrentQuestion( int currentQuestion) {
 		instance.currentQuestion = currentQuestion;
+		return "";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static List<SectionInfoStruct> GetSectionsInfo() {
+		return instance.sectionsInfo;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------------*/
+	
+	public static string SetSectionsInfo( List<SectionInfoStruct> si) {
+		instance.sectionsInfo = si;
 		return "";
 	}
 }

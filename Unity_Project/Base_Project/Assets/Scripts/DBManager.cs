@@ -271,7 +271,7 @@ public class DBManager : MonoBehaviour {
 				reader.Close();
 				this.CloseConnection();
 
-				//SetGameRound(playerUserID);
+				//find game round
 				int gameRound = FindGameRound(playerUserID);
 				Debug.Log("gameRound : " + gameRound);
 
@@ -279,18 +279,28 @@ public class DBManager : MonoBehaviour {
 					DBInfo.SetGameRoundId(gameRound);
 				}
 				else{
+					//set new game rount
 					SetGameRound(playerUserID);
 				}
 
-
+				//find current section
 				FindCurrentSection(gameRound);
 
-				//
-				//Debug.Log(Count("section"));
+
 				DBInfo.SetLastSectionSerialNumber(GetLastSectionSerialNumber());
 
-				//Debug.Log(DBInfo.GetGameRoundId());
 				Debug.Log("last sections : " + DBInfo.GetLastSectionSerialNumber());
+
+				//get info from db for all sections (serial num, title, description)
+				DBInfo.SetSectionsInfo(GetAllSectionsInfo(1));
+
+				//print list
+				/*
+				List<SectionInfoStruct> sis = DBInfo.GetSectionsInfo();
+				for (int i = 0; i< sis.Count ; i++){
+					Debug.Log(sis[i].serialNumber +"  "+ sis[i].title +"  "+ sis[i].description);
+				}
+				*/
 
 			}
 			else
@@ -462,7 +472,7 @@ public class DBManager : MonoBehaviour {
 			string returnMsg;
 			MySqlDataReader reader = null;
 
-			Debug.Log("test1");
+			//Debug.Log("test1");
 			
 			//Create Mysql Command
 			MySqlCommand cmd = new MySqlCommand (cmdText, con);
@@ -491,7 +501,7 @@ public class DBManager : MonoBehaviour {
 	
 	/*---------------------------------------------------------------------------------------------------------------*/
 
-	private void SetGameRound(int playerUserID){
+	public void SetGameRound(int playerUserID){
 
 		//insert gameround
 		string query = "INSERT INTO game_round (users_user_id) VALUES('" + playerUserID + "')";
@@ -847,4 +857,65 @@ public class DBManager : MonoBehaviour {
 			return (temp);//("can not open connection");
 		}
 	}
+
+	/*---------------------------------------------------------------------------------------------------------------*/
+
+	public List<SectionInfoStruct> GetAllSectionsInfo (int gameId){
+		
+		string cmdText = "SELECT serial_number as temp, title, description " +
+						 "FROM section " + 
+						 "WHERE game_game_id = '" + gameId + "' " +
+						 "ORDER BY serial_number ASC" ;
+
+		List<SectionInfoStruct> sectionsInfo = new List<SectionInfoStruct> ();
+		//Open Connection
+		if (this.OpenConnection() == true)
+		{
+			//SectionInfoStruct sectionInfoStruct;
+			MySqlDataReader reader = null;
+			
+			
+			//Create Mysql Command
+			MySqlCommand cmd = new MySqlCommand(cmdText,con);
+			
+			//execure the reader
+			reader = cmd.ExecuteReader(); 
+			
+			while (reader.Read())
+			{
+				if (!reader.IsDBNull (reader.GetOrdinal ("temp"))){
+
+					SectionInfoStruct sectionInfoStruct = new SectionInfoStruct(
+															int.Parse(reader.GetString(0)),
+															reader.GetString(1),
+															""
+														  );
+					if (!reader.IsDBNull (reader.GetOrdinal ("description"))){
+						sectionInfoStruct.description = reader.GetString(2);
+					}
+
+					sectionsInfo.Add(sectionInfoStruct);
+				}
+				
+			}
+
+			
+			this.CloseConnection();
+
+			return sectionsInfo;
+			
+		}
+		else
+		{
+			this.CloseConnection();
+
+			/*sectionInfoStruct.serialNumber = -1;
+			sectionInfoStruct.title = "";
+			sectionInfoStruct.description = "";*/
+
+			return sectionsInfo;;//("can not open connection");
+		}
+	}
+
+
 }
