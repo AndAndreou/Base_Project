@@ -44,6 +44,10 @@ public class GoToLevel : MonoBehaviour {
 			if (Mathf.Abs (Vector3.Distance (targetTransform.position, this.transform.position)) <= distanceFromChar) {
 				flagDistance = true;
 				if (Input.GetKeyDown (KeyCode.F)) {
+					if (Application.loadedLevelName == "main_scene") {
+						Debug.Log("test");
+						DBInfo.SetPlayerFirstPositionForMainScene(targetTransform.position);
+					}
 					guiManager.LoadLavel(levelNameToGo);
 				}
 			} else {

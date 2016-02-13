@@ -36,6 +36,15 @@ public class CharacterController : MonoBehaviour {
 		sprint = false;
 		dontRunUpdate = false;
 
+		//if the scene is the main scene then transfor the player in the last position in main scene
+		if (Application.loadedLevelName == "main_scene") {
+			Vector3 dbtransform = DBInfo.GetPlayerFirstPositionForMainScene();
+			if (dbtransform != Vector3.zero){
+				this.transform.position = dbtransform;
+			}
+			
+		}
+
 	}
 	
 	// Update is called once per frame
@@ -86,7 +95,7 @@ public class CharacterController : MonoBehaviour {
 
 	public void teleport(Vector3 destination)
 	{
-		this.transform.position = destination + new Vector3(0,  this.GetComponent<BoxCollider>().size.y/2,0);
+		this.transform.position = destination /*+ new Vector3(0,  this.GetComponent<CapsuleCollider>().height/2.0f)*/;
 	}
 
 	public bool IsZooming()

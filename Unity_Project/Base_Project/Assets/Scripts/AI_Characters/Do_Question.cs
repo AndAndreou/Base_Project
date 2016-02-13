@@ -206,6 +206,8 @@ public class Do_Question : MonoBehaviour {
 					if(sectionNo < 0 ){
 						flagPressButton = false;
 						qAndaGUIShow = false;
+						timeExtraMsg = 0 ;
+						showExtraMsg = true;
 					}
 				}
 			}
@@ -380,6 +382,7 @@ public class Do_Question : MonoBehaviour {
 			//show question and answer panel
 			if (qAndaGUIShow == true) 
 			{
+				//show extra msg
 				if((currentQuestion == 0) && (extraText!="") && (showExtraMsg == true)){
 					DrawExtraText();
 				}

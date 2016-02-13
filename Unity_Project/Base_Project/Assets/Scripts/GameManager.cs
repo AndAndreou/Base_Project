@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
-		isPause = false;
+		//isPause = false;
+		UnPause();
 		guiManager =  GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<GUIManager>();
 		pauseGUI = GameObject.FindWithTag (GameRepository.GetGUIManagerTag()).GetComponent<PauseGUI>();
 		//maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
@@ -36,8 +37,10 @@ public class GameManager : MonoBehaviour {
 		AudioListener.volume = GameRepository.GetVolumeLevel() / 10.0F;
 		PlayBackgroundSfx ();
 
-		Time.timeScale = 1;
-		Cursor.visible = false; 
+		//Time.timeScale = 1;
+		//Cursor.visible = false; 
+
+
 
 	}
 	

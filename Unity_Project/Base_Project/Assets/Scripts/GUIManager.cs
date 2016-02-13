@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GUIManager : MonoBehaviour {
 
@@ -15,8 +16,10 @@ public class GUIManager : MonoBehaviour {
 	public RenderTexture miniMapTexture;
 	public Material miniMapMaterial;
 
-	public Vector2 miniMapOffset;
+	public Texture playerPoint;
+	public Vector2 playerPointIconSize;
 
+	public Vector2 miniMapOffset;
 
 	public Texture backgroundTexture;
 	public RenderTexture maxMapTexture;
@@ -80,10 +83,11 @@ public class GUIManager : MonoBehaviour {
 
 		//showPauseMenu = false;
 		if (useMaxMap) {
-			teleportPoint = GameObject.FindGameObjectsWithTag (GameRepository.GetTeleportPointTag ());
+			teleportPoint = GameObject.FindGameObjectsWithTag (GameRepository.GetTeleportPointTag ()).OrderBy( go => go.name ).ToArray();
 			parentTeleportPoints = GameObject.FindWithTag (GameRepository.GetParentTeleportPointsTag ());
 			maxMapCamera = GameObject.FindWithTag (GameRepository.GetMapCameraTag ());
 			SetMaxMapShow (false);
+
 		}
 		player = GameObject.FindWithTag (GameRepository.GetPlayerTag());
 		characterControllerScript = player.GetComponent<CharacterController> ();
@@ -138,6 +142,26 @@ public class GUIManager : MonoBehaviour {
 	{
 		Rect miniMapTextureRect = new Rect (Screen.width - miniMapTexture.width - miniMapOffset.x, miniMapOffset.y, miniMapTexture.width, miniMapTexture.height);
 		Graphics.DrawTexture (miniMapTextureRect, miniMapTexture, miniMapMaterial);  
+
+
+		Vector2 playerPointSize;
+		playerPointSize.x = miniMapTexture.width * playerPointIconSize.x;
+		playerPointSize.y = miniMapTexture.height * playerPointIconSize.y;
+
+		Vector2 playerPointPosition;
+		playerPointPosition.x = Screen.width - miniMapTexture.width / 2.0f - miniMapOffset.x - playerPointSize.x / 2.0f;
+		playerPointPosition.y = miniMapOffset.y + miniMapTexture.height / 2.0f - playerPointSize.y / 2.0f;
+
+		Rect playerPointTextureRect = new Rect (playerPointPosition.x, playerPointPosition.y ,playerPointSize.x, playerPointSize.y );
+
+		Matrix4x4 matrixBackup = GUI.matrix;
+		Vector2 pivotPoint;
+		pivotPoint.x = playerPointTextureRect.x + playerPointSize.x/2.0f;
+		pivotPoint.y = playerPointTextureRect.y + playerPointSize.y/2.0f;
+		GUIUtility.RotateAroundPivot(player.transform.eulerAngles.y, pivotPoint);
+		//Debug.Log ((player.transform.eulerAngles.y));
+		Graphics.DrawTexture (playerPointTextureRect, playerPoint);  
+		GUI.matrix = matrixBackup;
 	}
 
 /*---------------------------------------------------------------------------------------------------------------*/	
