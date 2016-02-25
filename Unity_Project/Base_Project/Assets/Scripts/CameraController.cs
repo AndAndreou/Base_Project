@@ -25,7 +25,8 @@ public class CameraController : MonoBehaviour {
 	//private PlayerControl playerControl;
 	private GameManager gameManager;
 	private GameObject targetGameObject;
-	private CharacterController characterController;
+	//private CharacterController characterController;
+	private MainChararacter_Controller characterController;
 	private Transform targetTransform;
 	private float angleH = 0;
 	private float angleV = 0;
@@ -59,7 +60,8 @@ public class CameraController : MonoBehaviour {
 
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 		targetGameObject = GameObject.FindWithTag (GameRepository.GetPlayerTag ());
-		characterController = targetGameObject.GetComponent<CharacterController>();
+		//characterController = targetGameObject.GetComponent<CharacterController>();
+		characterController = targetGameObject.GetComponent<MainChararacter_Controller>();
 		targetTransform = targetGameObject.transform;
 
 		cam = transform;

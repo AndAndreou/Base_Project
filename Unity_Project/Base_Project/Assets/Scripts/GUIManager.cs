@@ -6,7 +6,8 @@ using System.Linq;
 public class GUIManager : MonoBehaviour {
 
 	private GameObject player;
-	private CharacterController characterControllerScript;
+	//private CharacterController characterControllerScript;
+	private MainChararacter_Controller characterControllerScript;
 	private GameObject[] teleportPoint;
 	private GameObject parentTeleportPoints;
 	private PauseGUI pauseGUI; 
@@ -90,7 +91,8 @@ public class GUIManager : MonoBehaviour {
 
 		}
 		player = GameObject.FindWithTag (GameRepository.GetPlayerTag());
-		characterControllerScript = player.GetComponent<CharacterController> ();
+		//characterControllerScript = player.GetComponent<CharacterController> ();
+		characterControllerScript = player.GetComponent<MainChararacter_Controller> ();
 		pauseGUI = this.GetComponent<PauseGUI> ();
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 

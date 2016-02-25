@@ -1,9 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\..\..\Uni\ADE\AI test project\AI test project\Assets\AIConeDetection.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AI_Characters\RandomBehavior.cs">
     <Files>
-      <File FileName="..\..\..\..\..\Uni\ADE\AI test project\AI test project\Assets\AIConeDetection.cs" Line="147" Column="4" />
-      <File FileName="..\..\..\..\..\Uni\ADE\AI test project\AI test project\Assets\capsule.cs" Line="57" Column="4" />
+      <File FileName="Assets\Scripts\AI_Characters\RandomBehavior.cs" Line="88" Column="4" />
+      <File FileName="Assets\Scripts\AI_Characters\SpawnController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Character Controller\MainChararacter_Controller.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUIManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Tutorial.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CameraController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AI_Characters\Do_Question.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

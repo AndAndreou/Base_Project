@@ -7,7 +7,8 @@ public class Do_Question : MonoBehaviour {
 	private GameManager gameManager;
 	private DBManager dbManager;
 	private CameraController cameraController;
-	private CharacterController characterController;
+	//private CharacterController characterController;
+	private MainChararacter_Controller characterController;
 
 	public float distanceFromChar;
 	public float distanceForUpdate;
@@ -89,7 +90,8 @@ public class Do_Question : MonoBehaviour {
 		targetTransform = targetGameObject.transform;
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 		dbManager = GameObject.FindWithTag (GameRepository.GetDBManagerTag()).GetComponent<DBManager>();
-		characterController = targetGameObject.GetComponent<CharacterController>();
+		//characterController = targetGameObject.GetComponent<CharacterController>();
+		characterController = targetGameObject.GetComponent<MainChararacter_Controller>();
 		cameraController = GameObject.FindWithTag (GameRepository.GetMainCameraTag()).GetComponent<CameraController>();
 
 		//add new lines in string

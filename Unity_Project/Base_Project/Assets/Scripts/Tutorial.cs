@@ -6,7 +6,8 @@ public class Tutorial : MonoBehaviour {
 
 	private GameManager gameManager;
 	private CameraController cameraController;
-	private CharacterController characterController;
+	//private CharacterController characterController;
+	private MainChararacter_Controller characterController;
 	private GameObject targetGameObject;
 
 
@@ -37,7 +38,8 @@ public class Tutorial : MonoBehaviour {
 	
 		gameManager = GameObject.FindWithTag (GameRepository.GetGameManagerTag()).GetComponent<GameManager>();
 		targetGameObject = GameObject.FindWithTag (GameRepository.GetPlayerTag ());
-		characterController = targetGameObject.GetComponent<CharacterController>();
+		//characterController = targetGameObject.GetComponent<CharacterController>();
+		characterController = targetGameObject.GetComponent<MainChararacter_Controller>();
 		cameraController = GameObject.FindWithTag (GameRepository.GetMainCameraTag()).GetComponent<CameraController>();
 
 
